@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" xmlns:mida="http://mida.org/schema/1.0/bpmn" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.11.3">
+  <bpmn:collaboration id="Collaboration_19w18kt">
+    <bpmn:participant id="Participant_1861lh9" name="Pool" processRef="Process_1seeuyd">
+      <bpmn:participantMultiplicity minimum="30" maximum="30" />
+    </bpmn:participant>
+  </bpmn:collaboration>
+  <bpmn:process id="Process_1seeuyd">
+    <bpmn:task id="Task_0j0m57r" name="Task A">
+      <bpmn:extensionElements>
+        <mida:taskType>
+          <mida:type>na_c</mida:type>
+        </mida:taskType>
+        <mida:guard />
+        <mida:assignments>
+          <mida:assignment assignment="a = 1" />
+        </mida:assignments>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_0ec9e8u</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1qquz0n</bpmn:outgoing>
+      <bpmn:dataOutputAssociation id="DataOutputAssociation_0joq9sr">
+        <bpmn:targetRef>DataObjectReference_1wlo2f2</bpmn:targetRef>
+      </bpmn:dataOutputAssociation>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="SequenceFlow_0ec9e8u" sourceRef="StartEvent_1qto000" targetRef="Task_0j0m57r" />
+    <bpmn:sequenceFlow id="SequenceFlow_1qquz0n" sourceRef="Task_0j0m57r" targetRef="ExclusiveGateway_157b5ok" />
+    <bpmn:parallelGateway id="ExclusiveGateway_157b5ok">
+      <bpmn:incoming>SequenceFlow_1qquz0n</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0ligxba</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_1chy3mr</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    <bpmn:sequenceFlow id="SequenceFlow_0ligxba" sourceRef="ExclusiveGateway_157b5ok" targetRef="Task_00529gb" />
+    <bpmn:sequenceFlow id="SequenceFlow_1chy3mr" sourceRef="ExclusiveGateway_157b5ok" targetRef="Task_0mav1h5" />
+    <bpmn:sequenceFlow id="SequenceFlow_1547idp" sourceRef="Task_00529gb" targetRef="ExclusiveGateway_10qygdd" />
+    <bpmn:endEvent id="EndEvent_1rn40vf">
+      <bpmn:incoming>SequenceFlow_0g43o1u</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_0g43o1u" sourceRef="ExclusiveGateway_10qygdd" targetRef="EndEvent_1rn40vf" />
+    <bpmn:parallelGateway id="ExclusiveGateway_10qygdd">
+      <bpmn:incoming>SequenceFlow_1547idp</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_0beuf1z</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0g43o1u</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    <bpmn:sequenceFlow id="SequenceFlow_0beuf1z" sourceRef="Task_0mav1h5" targetRef="ExclusiveGateway_10qygdd" />
+    <bpmn:task id="Task_0mav1h5" name="Task C">
+      <bpmn:extensionElements>
+        <mida:taskType>
+          <mida:type>na_nc</mida:type>
+        </mida:taskType>
+        <mida:guard>
+          <mida:exp>a == 1</mida:exp>
+        </mida:guard>
+        <mida:assignments>
+          <mida:assignment assignment="c = 5" />
+          <mida:assignment assignment="a  = 0" />
+        </mida:assignments>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_1chy3mr</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0beuf1z</bpmn:outgoing>
+      <bpmn:property id="Property_0w96fzf" name="__targetRef_placeholder" />
+      <bpmn:dataInputAssociation id="DataInputAssociation_0erq6ff">
+        <bpmn:sourceRef>DataObjectReference_1wlo2f2</bpmn:sourceRef>
+        <bpmn:targetRef>Property_0w96fzf</bpmn:targetRef>
+      </bpmn:dataInputAssociation>
+      <bpmn:dataOutputAssociation id="DataOutputAssociation_1fszv4h">
+        <bpmn:targetRef>DataObjectReference_1wlo2f2</bpmn:targetRef>
+      </bpmn:dataOutputAssociation>
+    </bpmn:task>
+    <bpmn:dataObjectReference id="DataObjectReference_1wlo2f2" name="Data" dataObjectRef="DataObject_0wmklzh">
+      <bpmn:extensionElements>
+        <mida:dataObjFields>
+          <mida:dataField dataField="a" />
+          <mida:dataField dataField="b" />
+          <mida:dataField dataField="c" />
+        </mida:dataObjFields>
+      </bpmn:extensionElements>
+    </bpmn:dataObjectReference>
+    <bpmn:dataObject id="DataObject_0wmklzh" />
+    <bpmn:task id="Task_00529gb" name="Task B">
+      <bpmn:extensionElements>
+        <mida:taskType>
+          <mida:type>na_nc</mida:type>
+        </mida:taskType>
+        <mida:guard>
+          <mida:exp>a == 1</mida:exp>
+        </mida:guard>
+        <mida:assignments>
+          <mida:assignment assignment="b = 2" />
+          <mida:assignment assignment="a = 0" />
+        </mida:assignments>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_0ligxba</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1547idp</bpmn:outgoing>
+      <bpmn:property id="Property_0fafycw" name="__targetRef_placeholder" />
+      <bpmn:dataInputAssociation id="DataInputAssociation_1fk0ked">
+        <bpmn:sourceRef>DataObjectReference_1wlo2f2</bpmn:sourceRef>
+        <bpmn:targetRef>Property_0fafycw</bpmn:targetRef>
+      </bpmn:dataInputAssociation>
+      <bpmn:dataOutputAssociation id="DataOutputAssociation_183c2kp">
+        <bpmn:targetRef>DataObjectReference_1wlo2f2</bpmn:targetRef>
+      </bpmn:dataOutputAssociation>
+    </bpmn:task>
+    <bpmn:startEvent id="StartEvent_1qto000">
+      <bpmn:outgoing>SequenceFlow_0ec9e8u</bpmn:outgoing>
+    </bpmn:startEvent>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_19w18kt">
+      <bpmndi:BPMNShape id="Participant_1861lh9_di" bpmnElement="Participant_1861lh9">
+        <dc:Bounds x="792" y="313" width="627" height="265" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="StartEvent_1qto000_di" bpmnElement="StartEvent_1qto000">
+        <dc:Bounds x="842" y="425" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_0j0m57r_di" bpmnElement="Task_0j0m57r">
+        <dc:Bounds x="911" y="403" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0ec9e8u_di" bpmnElement="SequenceFlow_0ec9e8u">
+        <di:waypoint x="878" y="443" />
+        <di:waypoint x="911" y="443" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="DataObjectReference_1wlo2f2_di" bpmnElement="DataObjectReference_1wlo2f2" bioc:stroke="#000" bioc:fill="#fff">
+        <dc:Bounds x="1020" y="335" width="36" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1026" y="370" width="24" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1qquz0n_di" bpmnElement="SequenceFlow_1qquz0n">
+        <di:waypoint x="1011" y="443" />
+        <di:waypoint x="1061" y="443" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ParallelGateway_1gm9dm5_di" bpmnElement="ExclusiveGateway_157b5ok">
+        <dc:Bounds x="1061" y="418" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_00529gb_di" bpmnElement="Task_00529gb">
+        <dc:Bounds x="1161" y="333" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0ligxba_di" bpmnElement="SequenceFlow_0ligxba">
+        <di:waypoint x="1086" y="418" />
+        <di:waypoint x="1086" y="373" />
+        <di:waypoint x="1161" y="373" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Task_0mav1h5_di" bpmnElement="Task_0mav1h5">
+        <dc:Bounds x="1161" y="478" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1chy3mr_di" bpmnElement="SequenceFlow_1chy3mr">
+        <di:waypoint x="1086" y="468" />
+        <di:waypoint x="1086" y="518" />
+        <di:waypoint x="1161" y="518" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="EndEvent_1rn40vf_di" bpmnElement="EndEvent_1rn40vf">
+        <dc:Bounds x="1363" y="425" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1547idp_di" bpmnElement="SequenceFlow_1547idp">
+        <di:waypoint x="1261" y="373" />
+        <di:waypoint x="1310" y="373" />
+        <di:waypoint x="1310" y="418" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0g43o1u_di" bpmnElement="SequenceFlow_0g43o1u">
+        <di:waypoint x="1310" y="443" />
+        <di:waypoint x="1363" y="443" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ParallelGateway_0lsbpjw_di" bpmnElement="ExclusiveGateway_10qygdd">
+        <dc:Bounds x="1285" y="418" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0beuf1z_di" bpmnElement="SequenceFlow_0beuf1z">
+        <di:waypoint x="1261" y="518" />
+        <di:waypoint x="1310" y="518" />
+        <di:waypoint x="1310" y="468" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DataOutputAssociation_0joq9sr_di" bpmnElement="DataOutputAssociation_0joq9sr">
+        <di:waypoint x="961" y="403" />
+        <di:waypoint x="961" y="360" />
+        <di:waypoint x="1020" y="360" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DataInputAssociation_0erq6ff_di" bpmnElement="DataInputAssociation_0erq6ff">
+        <di:waypoint x="1038" y="385" />
+        <di:waypoint x="1038" y="539" />
+        <di:waypoint x="1161" y="539" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DataOutputAssociation_1fszv4h_di" bpmnElement="DataOutputAssociation_1fszv4h">
+        <di:waypoint x="1162" y="553" />
+        <di:waypoint x="1024" y="553" />
+        <di:waypoint x="1024" y="385" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DataOutputAssociation_183c2kp_di" bpmnElement="DataOutputAssociation_183c2kp">
+        <di:waypoint x="1161" y="360" />
+        <di:waypoint x="1056" y="360" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DataInputAssociation_1fk0ked_di" bpmnElement="DataInputAssociation_1fk0ked">
+        <di:waypoint x="1056" y="343" />
+        <di:waypoint x="1161" y="343" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

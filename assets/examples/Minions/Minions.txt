@@ -1,0 +1,11 @@
+Title:
+Minions
+
+Description:
+The collaboration model combines the activities of three participants. The Daughters desire a cake composed by 3 coloured layers and decorations. They provide the cake desiderata to the dad. He demand the task to three minions, one for each layer of the cake.
+Then the dad has to combine precisely the layers to match the desiderata. If the cake is as requested by the Daughters, they are happy, otherwise they are sad.
+
+Versions:
+Minions.bpmn - Correct version
+Minions_issue1.bpmn - Bad termination - The start message event in pool Dad has a wrong receiving template that switch the layer's order.
+Minions_issue2.bpmn - Bad termination - The receive task Receive & Apply Decorations in pool Dad do not correlate the received messages. Then layers and decorations do not match the desiderata.

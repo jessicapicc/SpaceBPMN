@@ -1,0 +1,57 @@
+{
+  "name": "spacebpmn",
+  "version": "1.0.0",
+  "description": "Master thesis project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron .",
+    "all": "run-s bundle dev",
+    "bundle": "webpack",
+    "bundle:watch": "webpack -w",
+    "dev": "webpack serve --static ./dist --open-app-name ./index.html",
+    "build":"run-s bundle win mac linux",
+    "mac" : "electron-packager . Mida --overwrite --platform=darwin --arch=x64 --icon=assets/favicon.icns --prune=true --out=../executables/ & powershell Compress-Archive ../executables/Mida-darwin-x64 builds/Mida-MacOS.zip",
+    "linux" : "electron-packager . Mida --overwrite --asar=true --platform=linux --arch=x64 --icon=assets/favicon.png --prune=true --out=../executables/ & powershell Compress-Archive ../executables/Mida-linux-x64 builds/Mida-Linux.zip",
+    "win" : "electron-packager . Mida --overwrite --asar=true --platform=win32 --arch=ia32 --icon=assets/favicon.ico --prune=true --out=../executables/ & powershell Compress-Archive ../executables/Mida-win32-ia32 builds/Mida-Win.zip"
+
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jessicapicc/SpaceBPMN.git"
+  },
+  "keywords": [
+    "bpmn",
+    "space",
+    "robot",
+    "unicam"
+  ],
+  "author": "Jessica Piccioni",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jessicapicc/SpaceBPMN/issues"
+  },
+  "homepage": "https://github.com/jessicapicc/SpaceBPMN#readme",
+
+  "devDependencies": {
+    "@mdi/js": "^7.0.96",
+    "bpmn-js": "^11.0.1",
+    "bpmn-js-properties-panel": "^1.12.0",
+    "webpack-cli": "^5.0.0",
+    "webpack-dev-server": "^4.11.1"
+  },
+  "dependencies": {
+    "@types/lodash": "^4.14.190",
+    "axios": "^1.2.0",
+    "bpmn-font": "^0.10.0",
+    "camunda-bpmn-moddle": "^7.0.1",
+    "copy-webpack-plugin": "^11.0.0",
+    "diagram-js": "^11.1.1",
+    "lodash": "^4.17.21",
+    "min-dom": "^4.0.3",
+    "raw-loader": "^4.0.2",
+    "scroll-tabs": "^1.0.1",
+    "selection-update": "^0.1.2",
+    "svg.js": "^2.7.1" 
+  }
+}

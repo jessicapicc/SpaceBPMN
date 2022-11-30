@@ -1,0 +1,14 @@
+Title:
+InternshipProcedure
+
+Description:
+Model a BPMN collaboration in which is depicted an internship procedure. The actors of this process are the Students,
+the Internship Office, the Internship Delegate and the Companies. Each Company can interact with the Internship Office
+by registering or logging in the online platform. After that, the Company can update an internship proposal and waits
+for a student agreement. Students that wants to join an internship must have at least 180 ECTS, this allows them to
+attend the occupational safety course. Then, each student chooses one of the available internships communicating it
+to the Company. Now, the Company sends the required documentation to the Internship Delegate that assign a Tutor to
+check and register the completion of the project. Finally, the Student receives the award and the collaboration completes.
+
+Versions:
+InternshipProcedure.bpmn - Correct version
