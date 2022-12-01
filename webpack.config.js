@@ -1,42 +1,46 @@
-var path = require('path');
+/* eslint-env node */
+
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+const { DefinePlugin } = require('webpack');
 
 
-var CopyWebpackPlugin = require('copy-webpack-plugin');
-var WriteFilePlugin = require('write-file-webpack-plugin');
+module.exports = (env, argv) => {
 
-module.exports = {
-  mode: 'development',
-  entry: {
-    index : './dist/index.js',
-    viewer: './dist/viewer.js',
-    modeler: './dist/modeler.js'
-  },
-  output: {
-    filename: '[name].bundle.js',
-    path: __dirname + '/dist'
-  },
-  module: {
-    rules: [
-      {
-        test: /\.bpmn$/,
-        use: {
-          loader: 'raw-loader'
-        }
-      }
-    ]
-  },
-  devServer: {
-    static: {
-      directory: __dirname + '/dist'
+  const mode = argv.mode || 'development';
+
+  const devtool = mode === 'development' ? 'eval-source-map' : 'source-map';
+
+  return {
+    mode,
+    entry: {
+      viewer: './example/src/viewer.js',
+      modeler: './example/src/modeler.js'
     },
-    compress: true,
-  },
-  plugins: [
-    new CopyWebpackPlugin([
-      { from: './node_modules/diagram-js/assets/diagram-js.css', to: './css' },
-      { from: './node_modules/bpmn-font/dist/css/bpmn-embedded.css', to: './css' },
-      { from: './assets/fonts/*', to: './fonts', flatten:true},
-      { from: './assets/css/*', to: './css', flatten:true }
-    ])],
-  target : 'node',
+    output: {
+      filename: 'dist/[name].js',
+      path: __dirname + '/example'
+    },
+    module: {
+      rules: [
+        {
+          test: /\.bpmn$/,
+          type: 'asset/source'
+        }
+      ]
+    },
+    plugins: [
+      new CopyWebpackPlugin({
+        patterns: [
+          { from: './assets', to: 'dist/vendor/bpmn-js-token-simulation/assets' },
+          { from: 'bpmn-js/dist/assets', context: 'node_modules', to: 'dist/vendor/bpmn-js/assets' },
+          { from: 'bpmn-js-properties-panel/dist/assets', context: 'node_modules', to: 'dist/vendor/bpmn-js-properties-panel/assets' }
+        ]
+      }),
+      new DefinePlugin({
+        'process.env.TOKEN_SIMULATION_VERSION': JSON.stringify(require('./package.json').version)
+      })
+    ],
+    devtool
+  };
+
 };

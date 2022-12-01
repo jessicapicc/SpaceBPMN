@@ -1,5 +1,0 @@
-.guardViolation-overlay{
-  background-color: red; /* color elements as red */
-  opacity: 0.4;
-  pointer-events: none; /* no pointer events, allows clicking through onto the element */
-}
