@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
 
-  <title>BPMN Token Simulation Demo</title>
+  <title>SpaceBPMN Demo</title>
 
   <link rel="stylesheet" href="./style.css" />
 
@@ -11,46 +11,57 @@
 
   <meta property="og:locale" content="en_US" />
   <meta property="og:type" content="website" />
-  <meta property="og:site_name" content="bpmn-js-token-simulation demo" />
-  <meta property="og:title" content="BPMN Token Simulation Demo" />
-  <meta property="og:url" content="https://bpmn-io.github.io/bpmn-js-token-simulation/index.html" />
-  <meta property="og:description" content="Simulate your BPMN diagrams with bpmn-js-token-simulation. Understand and learn BPMN execution semantics one token at a time." />
-  <meta property="og:image" content="https://bpmn-io.github.io/bpmn-js-token-simulation/screenshot.png" />
-
-  <style>
-    html,
-    body {
-      height: 100%;
-      overflow: hidden;
-    }
-
-    body {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      font-family: 'Arial', sans-serif;
-    }
-
-    body {
-      color: #555;
-    }
-
-    .link {
-      display: inline-block;
-      margin: 10px;
-    }
+  <meta property="og:site_name" content="space BPMN demo" />
+  <meta property="og:title" content="Space BPMN Demo" />
+  <meta property="og:description" content="Simulate your BPMN diagrams by considering also space. Understand and learn BPMN execution semantics one token at a time." />
+    
+   <style>
+        html,
+        body {
+          height: 100%;
+          overflow: hidden;
+        }
+    
+        body {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          font-family: 'Arial', sans-serif;
+        }
+    
+      #homeBar {
+        width: 1%;
+        height: 3px;
+        background-color: hsl(101, 100%, 37%);
+      }
+    #homeProgress {
+    width: 100%;
+  }
   </style>
 </head>
 <body>
-  <h1>bpmn-js-token-simulation</h1>
-
-  <p>
-    A token simulation extension for <a href="https://github.com/bpmn-io/bpmn-js">bpmn-js</a>. Check out the project <a href="https://github.com/bpmn-io/bpmn-js-token-simulation">on GitHub</a>.
-  </p>
-
-  <p style="margin-top: 3em">
-    <a class="link" href="viewer.html">Open Viewer</a> or <a class="link" href="modeler.html">Open Modeler</a>
-  </p>
+  <h1> SPACE BPMN DEMO </h1>
+  <div>
+    <div style="width: 50%; margin-left: auto;  margin-right : auto"><img src="favicon.png" alt="Mida Web Client" style="width: 100%"></img>
+    </div>
+  <br>
+  <div id="homeProgress">
+  <div id="homeBar"></div>
+</div></div>
+<script>
+  var elem = document.getElementById("homeBar");
+  var width = 1;
+  var id = setInterval(frame, 10);
+  function frame() {
+    if (width >= 100) {
+      clearInterval(id);
+      window.location.replace("modeler.html");     // window.open("modeler.html", '_self');
+    } else {
+      width++;
+      elem.style.width = width + '%';
+    }
+  }
+</script>
+  <script src="./index.js"></script>
 </body>
 </html>

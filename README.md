@@ -6,6 +6,6 @@
 
 `npm install`
 
-###Run Mida
+###Run Space BPMN
 
-`npm run dev`
+`npm run start:example`
