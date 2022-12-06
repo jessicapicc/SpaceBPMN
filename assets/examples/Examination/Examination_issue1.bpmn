@@ -1,0 +1,818 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mida="http://mida.org/schema/1.0/bpmn" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.11.3">
+  <bpmn:collaboration id="Collaboration_13fcc2l">
+    <bpmn:participant id="Participant_123mtuo" name="Student" processRef="Process_1">
+      <bpmn:participantMultiplicity minimum="5" maximum="5" />
+    </bpmn:participant>
+    <bpmn:participant id="Participant_13bi2r1" name="Professor" processRef="Process_1bzwo5y">
+      <bpmn:participantMultiplicity minimum="1" maximum="5" />
+    </bpmn:participant>
+    <bpmn:participant id="Participant_1h2vp4x" name="Secretary" processRef="Process_0e44x3d">
+      <bpmn:participantMultiplicity minimum="1" maximum="1" />
+    </bpmn:participant>
+    <bpmn:messageFlow id="MessageFlow_1rz7yoa" name="access" sourceRef="Task_1itiad5" targetRef="StartEvent_0ida8on" />
+    <bpmn:messageFlow id="MessageFlow_1up1uey" name="exams list" sourceRef="Task_0z0hvp5" targetRef="Task_00qpirs" />
+    <bpmn:messageFlow id="MessageFlow_0vzlcyh" name="prenotation" sourceRef="Task_02nb2qf" targetRef="Task_0lmmxss" />
+    <bpmn:messageFlow id="MessageFlow_0pglov5" name="new session" sourceRef="Task_1xsnpge" targetRef="Task_0mkmvsu" />
+    <bpmn:messageFlow id="MessageFlow_10v526h" name="alert" sourceRef="Task_0lg0ndt" targetRef="Task_0fhreho" />
+    <bpmn:messageFlow id="MessageFlow_1tn79ux" name="evaluation" sourceRef="Task_0aiosbh" targetRef="Task_16xymjs" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_1" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>SequenceFlow_04xcz85</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sendTask id="Task_1itiad5" name="Access Online Secretary" assignments="Student_myid = &#39;000000&#39;+instance;" message="Student_myid">
+      <bpmn:extensionElements>
+        <mida:taskType>
+          <mida:type>a</mida:type>
+        </mida:taskType>
+        <mida:guard />
+        <mida:message>
+          <mida:field field="Student_id" />
+        </mida:message>
+        <mida:assignments>
+          <mida:assignment assignment="Prenotation_studentId = Student_id" />
+        </mida:assignments>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_04xcz85</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1p9n8ok</bpmn:outgoing>
+      <bpmn:property id="Property_04t89je" name="__targetRef_placeholder" />
+      <bpmn:dataInputAssociation id="DataInputAssociation_1efkzm4">
+        <bpmn:sourceRef>DataObjectReference_18e0s05</bpmn:sourceRef>
+        <bpmn:targetRef>Property_04t89je</bpmn:targetRef>
+      </bpmn:dataInputAssociation>
+      <bpmn:dataOutputAssociation id="DataOutputAssociation_1ds3xm5">
+        <bpmn:targetRef>DataObjectReference_1h864w7</bpmn:targetRef>
+      </bpmn:dataOutputAssociation>
+    </bpmn:sendTask>
+    <bpmn:dataObjectReference id="DataObjectReference_1pset1o" name="Exams" dataObjectRef="DataObject_06g0ll6" fields="var Exam_examList;">
+      <bpmn:extensionElements>
+        <mida:dataObjFields>
+          <mida:dataField dataField="Exams_list" />
+        </mida:dataObjFields>
+      </bpmn:extensionElements>
+    </bpmn:dataObjectReference>
+    <bpmn:dataObject id="DataObject_06g0ll6" />
+    <bpmn:sendTask id="Task_02nb2qf" name="Book Exam" message="Math.floor(Math.rand() * Exam_examList.length); ">
+      <bpmn:extensionElements>
+        <mida:taskType>
+          <mida:type>a</mida:type>
+        </mida:taskType>
+        <mida:guard />
+        <mida:assignments>
+          <mida:assignment assignment="Prenotation_exam = Exams_list[1]" />
+        </mida:assignments>
+        <mida:message>
+          <mida:field field="Prenotation_exam" />
+        </mida:message>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_0ckdfe0</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0ictql2</bpmn:outgoing>
+      <bpmn:dataInputAssociation />
+      <bpmn:dataInputAssociation id="DataInputAssociation_06xarxh">
+        <bpmn:sourceRef>DataObjectReference_1pset1o</bpmn:sourceRef>
+      </bpmn:dataInputAssociation>
+      <bpmn:dataOutputAssociation id="DataOutputAssociation_00udunh">
+        <bpmn:targetRef>DataObjectReference_1h864w7</bpmn:targetRef>
+      </bpmn:dataOutputAssociation>
+    </bpmn:sendTask>
+    <bpmn:sequenceFlow id="SequenceFlow_04xcz85" sourceRef="StartEvent_1" targetRef="Task_1itiad5" />
+    <bpmn:sequenceFlow id="SequenceFlow_1p9n8ok" sourceRef="Task_1itiad5" targetRef="Task_00qpirs" />
+    <bpmn:sequenceFlow id="SequenceFlow_0ckdfe0" sourceRef="Task_00qpirs" targetRef="Task_02nb2qf" />
+    <bpmn:sequenceFlow id="SequenceFlow_0ictql2" sourceRef="Task_02nb2qf" targetRef="Task_0fhreho" />
+    <bpmn:sequenceFlow id="SequenceFlow_0t550x4" sourceRef="Task_0fhreho" targetRef="Task_0l1uq12" />
+    <bpmn:sequenceFlow id="SequenceFlow_13j096q" sourceRef="Task_0l1uq12" targetRef="Task_16xymjs" />
+    <bpmn:sequenceFlow id="SequenceFlow_109y63o" sourceRef="Task_16xymjs" targetRef="ExclusiveGateway_1f4410z" />
+    <bpmn:sequenceFlow id="SequenceFlow_19xaayl" name="Passed" sourceRef="ExclusiveGateway_1f4410z" targetRef="EndEvent_06rffyr">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">Prenotation_result &gt;17</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_1sf8ixw" name="Failed" sourceRef="ExclusiveGateway_1f4410z" targetRef="EndEvent_115d44b">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">Prenotation_result &lt;18</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:receiveTask id="Task_00qpirs" name="Choose Exam" message="Exam_examList">
+      <bpmn:extensionElements>
+        <mida:taskType>
+          <mida:type>a</mida:type>
+        </mida:taskType>
+        <mida:guard />
+        <mida:message>
+          <mida:field field="Exams_list" />
+        </mida:message>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_1p9n8ok</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0ckdfe0</bpmn:outgoing>
+      <bpmn:dataOutputAssociation />
+      <bpmn:dataOutputAssociation id="DataOutputAssociation_032jle9">
+        <bpmn:targetRef>DataObjectReference_1pset1o</bpmn:targetRef>
+      </bpmn:dataOutputAssociation>
+    </bpmn:receiveTask>
+    <bpmn:dataObjectReference id="DataObjectReference_18e0s05" name="Student" dataObjectRef="DataObject_0ynoggd" fields="var Student_name;" dataobjtype="input">
+      <bpmn:extensionElements>
+        <mida:dataObjFields>
+          <mida:dataField dataField="Student_name = [&#39;Francesco&#39;,&#39;Chiara&#39;,&#39;Barbara&#39;,&#39;Lorenzo&#39;,&#39;Flavio&#39;]" />
+          <mida:dataField dataField="Student_id = [&#39;0001&#39;,&#39;2931&#39;,&#39;3423&#39;,&#39;4343&#39;,&#39;2345&#39;]" />
+        </mida:dataObjFields>
+      </bpmn:extensionElements>
+    </bpmn:dataObjectReference>
+    <bpmn:dataObject id="DataObject_0ynoggd" isCollection="true" />
+    <bpmn:receiveTask id="Task_0fhreho" name="Receive Exam Alert">
+      <bpmn:extensionElements>
+        <mida:taskType>
+          <mida:type>a</mida:type>
+        </mida:taskType>
+        <mida:guard />
+        <mida:message>
+          <mida:field field="Prenotation_studentId" isCorrelation="true" />
+        </mida:message>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_0ictql2</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0t550x4</bpmn:outgoing>
+      <bpmn:property id="Property_15b8ky3" name="__targetRef_placeholder" />
+      <bpmn:dataInputAssociation id="DataInputAssociation_04rmmc9">
+        <bpmn:sourceRef>DataObjectReference_1h864w7</bpmn:sourceRef>
+        <bpmn:targetRef>Property_15b8ky3</bpmn:targetRef>
+      </bpmn:dataInputAssociation>
+    </bpmn:receiveTask>
+    <bpmn:task id="Task_0l1uq12" name="Do all the best">
+      <bpmn:extensionElements>
+        <mida:taskType>
+          <mida:type>a</mida:type>
+        </mida:taskType>
+        <mida:guard />
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_0t550x4</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_13j096q</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="ExclusiveGateway_1f4410z" name="How is the evaluation?">
+      <bpmn:incoming>SequenceFlow_109y63o</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_19xaayl</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_1sf8ixw</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:receiveTask id="Task_16xymjs" name="Receive Evaluation">
+      <bpmn:extensionElements>
+        <mida:taskType>
+          <mida:type>a</mida:type>
+        </mida:taskType>
+        <mida:guard />
+        <mida:message>
+          <mida:field field="Prenotation_studentId" isCorrelation="true" />
+          <mida:field field="Prenotation_result" />
+        </mida:message>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_13j096q</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_109y63o</bpmn:outgoing>
+      <bpmn:dataOutputAssociation id="DataOutputAssociation_09hnevp">
+        <bpmn:targetRef>DataObjectReference_1h864w7</bpmn:targetRef>
+      </bpmn:dataOutputAssociation>
+    </bpmn:receiveTask>
+    <bpmn:endEvent id="EndEvent_06rffyr">
+      <bpmn:incoming>SequenceFlow_19xaayl</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:endEvent id="EndEvent_115d44b">
+      <bpmn:incoming>SequenceFlow_1sf8ixw</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:dataObjectReference id="DataObjectReference_1h864w7" name="Prenotation" dataObjectRef="DataObject_18rr6ly">
+      <bpmn:extensionElements>
+        <mida:dataObjFields>
+          <mida:dataField dataField="Prenotation_studentId" />
+          <mida:dataField dataField="Prenotation_exam" />
+          <mida:dataField dataField="Prenotation_result" />
+        </mida:dataObjFields>
+      </bpmn:extensionElements>
+    </bpmn:dataObjectReference>
+    <bpmn:dataObject id="DataObject_18rr6ly" />
+  </bpmn:process>
+  <bpmn:process id="Process_1bzwo5y" isExecutable="false">
+    <bpmn:task id="Task_076wm1b" name="Examinate">
+      <bpmn:extensionElements>
+        <mida:taskType>
+          <mida:type>a</mida:type>
+        </mida:taskType>
+        <mida:guard />
+        <mida:assignments>
+          <mida:assignment assignment="getItem(Session)" />
+          <mida:assignment assignment="Session_marks = random(&#39;int&#39;, 30)" />
+          <mida:assignment assignment="putItem(Session)" />
+        </mida:assignments>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_1o6a7d2</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_04mwq12</bpmn:outgoing>
+      <bpmn:dataOutputAssociation id="DataOutputAssociation_062wic3">
+        <bpmn:targetRef>DataObjectReference_00e5r0m</bpmn:targetRef>
+      </bpmn:dataOutputAssociation>
+      <bpmn:multiInstanceLoopCharacteristics isSequential="true">
+        <bpmn:loopCardinality xsi:type="bpmn:tFormalExpression">5</bpmn:loopCardinality>
+      </bpmn:multiInstanceLoopCharacteristics>
+    </bpmn:task>
+    <bpmn:sendTask id="Task_0aiosbh" name="Evaluate">
+      <bpmn:extensionElements>
+        <mida:taskType>
+          <mida:type>a</mida:type>
+        </mida:taskType>
+        <mida:guard />
+        <mida:assignments>
+          <mida:assignment assignment="getItem(Session)" />
+        </mida:assignments>
+        <mida:message>
+          <mida:field field="Session_students" />
+          <mida:field field="Session_marks" />
+        </mida:message>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_04mwq12</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_16hu2ni</bpmn:outgoing>
+      <bpmn:dataOutputAssociation id="DataOutputAssociation_0s2g65w">
+        <bpmn:targetRef>DataObjectReference_00e5r0m</bpmn:targetRef>
+      </bpmn:dataOutputAssociation>
+      <bpmn:multiInstanceLoopCharacteristics isSequential="true">
+        <bpmn:loopCardinality xsi:type="bpmn:tFormalExpression">5</bpmn:loopCardinality>
+      </bpmn:multiInstanceLoopCharacteristics>
+    </bpmn:sendTask>
+    <bpmn:sendTask id="Task_0lg0ndt" name="Alert Student">
+      <bpmn:extensionElements>
+        <mida:taskType>
+          <mida:type>a</mida:type>
+        </mida:taskType>
+        <mida:guard />
+        <mida:assignments>
+          <mida:assignment assignment="getItem(Session)" />
+          <mida:assignment assignment="Registration_student = Session_students" />
+          <mida:assignment assignment="putItem(Session)" />
+        </mida:assignments>
+        <mida:message>
+          <mida:field field="Session_students" />
+        </mida:message>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_1oje7q9</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1o6a7d2</bpmn:outgoing>
+      <bpmn:property id="Property_1q9wjio" name="__targetRef_placeholder" />
+      <bpmn:dataInputAssociation id="DataInputAssociation_0j3opq2">
+        <bpmn:sourceRef>DataObjectReference_00e5r0m</bpmn:sourceRef>
+        <bpmn:targetRef>Property_1q9wjio</bpmn:targetRef>
+      </bpmn:dataInputAssociation>
+      <bpmn:multiInstanceLoopCharacteristics>
+        <bpmn:loopCardinality xsi:type="bpmn:tFormalExpression">5</bpmn:loopCardinality>
+      </bpmn:multiInstanceLoopCharacteristics>
+    </bpmn:sendTask>
+    <bpmn:receiveTask id="Task_0mkmvsu" name="Register Student">
+      <bpmn:extensionElements>
+        <mida:taskType>
+          <mida:type>a</mida:type>
+        </mida:taskType>
+        <mida:guard />
+        <mida:message>
+          <mida:field field="Registration_student" />
+          <mida:field field="Registration_exam" />
+        </mida:message>
+        <mida:assignments>
+          <mida:assignment assignment="createItem(Session)" />
+          <mida:assignment assignment="Session_students = Registration_student" />
+          <mida:assignment assignment="Session_exam = Registration_exam" />
+          <mida:assignment assignment="putItem(Session)" />
+        </mida:assignments>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_1vjy1bv</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1oje7q9</bpmn:outgoing>
+      <bpmn:dataOutputAssociation id="DataOutputAssociation_17ismu1">
+        <bpmn:targetRef>DataObjectReference_00e5r0m</bpmn:targetRef>
+      </bpmn:dataOutputAssociation>
+      <bpmn:dataOutputAssociation id="DataOutputAssociation_11kacxl">
+        <bpmn:targetRef>DataObjectReference_1lhmzs5</bpmn:targetRef>
+      </bpmn:dataOutputAssociation>
+      <bpmn:multiInstanceLoopCharacteristics isSequential="true">
+        <bpmn:loopCardinality xsi:type="bpmn:tFormalExpression">5</bpmn:loopCardinality>
+      </bpmn:multiInstanceLoopCharacteristics>
+    </bpmn:receiveTask>
+    <bpmn:task id="Task_039mlf2" name="Open Session">
+      <bpmn:extensionElements>
+        <mida:taskType>
+          <mida:type>a</mida:type>
+        </mida:taskType>
+        <mida:guard />
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_0mt3r0f</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1vjy1bv</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:startEvent id="StartEvent_1hg3cnq">
+      <bpmn:outgoing>SequenceFlow_0mt3r0f</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:dataObjectReference id="DataObjectReference_00e5r0m" name="Session" dataObjectRef="DataObject_17b3d4u">
+      <bpmn:extensionElements>
+        <mida:dataObjFields>
+          <mida:dataField dataField="Session_students" />
+          <mida:dataField dataField="Session_marks" />
+          <mida:dataField dataField="Session_exam" />
+        </mida:dataObjFields>
+      </bpmn:extensionElements>
+    </bpmn:dataObjectReference>
+    <bpmn:dataObject id="DataObject_17b3d4u" isCollection="true" />
+    <bpmn:task id="Task_0ghyxrp" name="Close Session">
+      <bpmn:extensionElements>
+        <mida:taskType>
+          <mida:type>a</mida:type>
+        </mida:taskType>
+        <mida:guard />
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_16hu2ni</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1ueykdk</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="EndEvent_09qxqia">
+      <bpmn:incoming>SequenceFlow_1ueykdk</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:dataObjectReference id="DataObjectReference_1lhmzs5" name="Registration" dataObjectRef="DataObject_0owh7sg">
+      <bpmn:extensionElements>
+        <mida:dataObjFields>
+          <mida:dataField dataField="Registration_student" />
+          <mida:dataField dataField="Registration_exam" />
+        </mida:dataObjFields>
+      </bpmn:extensionElements>
+    </bpmn:dataObjectReference>
+    <bpmn:dataObject id="DataObject_0owh7sg" />
+    <bpmn:sequenceFlow id="SequenceFlow_1ueykdk" sourceRef="Task_0ghyxrp" targetRef="EndEvent_09qxqia" />
+    <bpmn:sequenceFlow id="SequenceFlow_16hu2ni" sourceRef="Task_0aiosbh" targetRef="Task_0ghyxrp" />
+    <bpmn:sequenceFlow id="SequenceFlow_04mwq12" sourceRef="Task_076wm1b" targetRef="Task_0aiosbh" />
+    <bpmn:sequenceFlow id="SequenceFlow_1o6a7d2" sourceRef="Task_0lg0ndt" targetRef="Task_076wm1b" />
+    <bpmn:sequenceFlow id="SequenceFlow_0mt3r0f" sourceRef="StartEvent_1hg3cnq" targetRef="Task_039mlf2" />
+    <bpmn:sequenceFlow id="SequenceFlow_1vjy1bv" sourceRef="Task_039mlf2" targetRef="Task_0mkmvsu" />
+    <bpmn:sequenceFlow id="SequenceFlow_1oje7q9" sourceRef="Task_0mkmvsu" targetRef="Task_0lg0ndt" />
+  </bpmn:process>
+  <bpmn:process id="Process_0e44x3d" isExecutable="false">
+    <bpmn:receiveTask id="Task_0lmmxss" name="Book Student">
+      <bpmn:extensionElements>
+        <mida:taskType>
+          <mida:type>a</mida:type>
+        </mida:taskType>
+        <mida:guard />
+        <mida:message>
+          <mida:field field="Student_exam" />
+        </mida:message>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_0jw8apt</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1tznivc</bpmn:outgoing>
+      <bpmn:dataOutputAssociation id="DataOutputAssociation_01b9ul3">
+        <bpmn:targetRef>DataObjectReference_1mutzey</bpmn:targetRef>
+      </bpmn:dataOutputAssociation>
+    </bpmn:receiveTask>
+    <bpmn:sendTask id="Task_0z0hvp5" name="Communicate Exam Sessions" message="Exams_list">
+      <bpmn:extensionElements>
+        <mida:taskType>
+          <mida:type>a</mida:type>
+        </mida:taskType>
+        <mida:guard />
+        <mida:message>
+          <mida:field field="Exams_list" />
+        </mida:message>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_0oiv31a</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0jw8apt</bpmn:outgoing>
+      <bpmn:property name="__targetRef_placeholder" />
+      <bpmn:dataInputAssociation />
+      <bpmn:dataInputAssociation id="DataInputAssociation_1jkwdte">
+        <bpmn:sourceRef>DataObjectReference_19b297l</bpmn:sourceRef>
+      </bpmn:dataInputAssociation>
+    </bpmn:sendTask>
+    <bpmn:sendTask id="Task_1xsnpge" name="Advise Professor">
+      <bpmn:extensionElements>
+        <mida:taskType>
+          <mida:type>a</mida:type>
+        </mida:taskType>
+        <mida:guard />
+        <mida:message>
+          <mida:field field="Student_id" />
+          <mida:field field="Student_exam" />
+        </mida:message>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_1tznivc</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0ysrxly</bpmn:outgoing>
+      <bpmn:property id="Property_1nua44p" name="__targetRef_placeholder" />
+      <bpmn:dataInputAssociation />
+      <bpmn:dataInputAssociation id="DataInputAssociation_01brd79">
+        <bpmn:sourceRef>DataObjectReference_1mutzey</bpmn:sourceRef>
+        <bpmn:targetRef>Property_1nua44p</bpmn:targetRef>
+      </bpmn:dataInputAssociation>
+    </bpmn:sendTask>
+    <bpmn:dataObjectReference id="DataObjectReference_1mutzey" name="Student" dataObjectRef="DataObject_1phak9z">
+      <bpmn:extensionElements>
+        <mida:dataObjFields>
+          <mida:dataField dataField="Student_id" />
+          <mida:dataField dataField="Student_exam" />
+        </mida:dataObjFields>
+      </bpmn:extensionElements>
+    </bpmn:dataObjectReference>
+    <bpmn:dataObject id="DataObject_1phak9z" />
+    <bpmn:startEvent id="StartEvent_0ida8on">
+      <bpmn:extensionElements>
+        <mida:message>
+          <mida:field field="Student_id" />
+        </mida:message>
+      </bpmn:extensionElements>
+      <bpmn:outgoing>SequenceFlow_0oiv31a</bpmn:outgoing>
+      <bpmn:messageEventDefinition />
+    </bpmn:startEvent>
+    <bpmn:dataObjectReference id="DataObjectReference_19b297l" name="Exams" dataObjectRef="DataObject_1aq9nzh" fields="var Exams_list = [&#39;Cloud Computing&#39;,&#39;Neural Networks&#39;, &#39;Modelling &#38; Verification&#39;, &#39;Database&#39;, &#39;Object Oriented Programming&#39;];" dataobjtype="input">
+      <bpmn:extensionElements>
+        <mida:dataObjFields>
+          <mida:dataField dataField="Exams_list = [&#39;Cloud Computing&#39;,&#39;Neural Networks&#39;, &#39;Modelling &#38; Verification&#39;, &#39;Database&#39;, &#39;Object Oriented Programming&#39;];" />
+        </mida:dataObjFields>
+      </bpmn:extensionElements>
+    </bpmn:dataObjectReference>
+    <bpmn:dataObject id="DataObject_1aq9nzh" />
+    <bpmn:endEvent id="EndEvent_1leh9md">
+      <bpmn:incoming>SequenceFlow_0ysrxly</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_0ysrxly" sourceRef="Task_1xsnpge" targetRef="EndEvent_1leh9md" />
+    <bpmn:sequenceFlow id="SequenceFlow_1tznivc" sourceRef="Task_0lmmxss" targetRef="Task_1xsnpge" />
+    <bpmn:sequenceFlow id="SequenceFlow_0jw8apt" sourceRef="Task_0z0hvp5" targetRef="Task_0lmmxss" />
+    <bpmn:sequenceFlow id="SequenceFlow_0oiv31a" sourceRef="StartEvent_0ida8on" targetRef="Task_0z0hvp5" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_13fcc2l">
+      <bpmndi:BPMNShape id="Participant_123mtuo_di" bpmnElement="Participant_123mtuo">
+        <dc:Bounds x="190" y="-312" width="1159" height="267" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="240" y="-163" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="213" y="-127" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Participant_13bi2r1_di" bpmnElement="Participant_13bi2r1">
+        <dc:Bounds x="484" y="262" width="1027" height="215" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_04xcz85_di" bpmnElement="SequenceFlow_04xcz85">
+        <di:waypoint x="276" y="-145" />
+        <di:waypoint x="316" y="-145" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="296" y="-166.5" width="0" height="13" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="SendTask_0ue2s5g_di" bpmnElement="Task_1itiad5">
+        <dc:Bounds x="316" y="-185" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_076wm1b_di" bpmnElement="Task_076wm1b">
+        <dc:Bounds x="1049" y="282" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1o6a7d2_di" bpmnElement="SequenceFlow_1o6a7d2">
+        <di:waypoint x="1010" y="322" />
+        <di:waypoint x="1049" y="322" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1221.5" y="118.5" width="0" height="13" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_04mwq12_di" bpmnElement="SequenceFlow_04mwq12">
+        <di:waypoint x="1149" y="322" />
+        <di:waypoint x="1187" y="322" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1360" y="118.5" width="0" height="13" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="SendTask_0h6znht_di" bpmnElement="Task_0aiosbh">
+        <dc:Bounds x="1187" y="282" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="SendTask_0nw1imr_di" bpmnElement="Task_0lg0ndt">
+        <dc:Bounds x="910" y="282" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_16hu2ni_di" bpmnElement="SequenceFlow_16hu2ni">
+        <di:waypoint x="1287" y="322" />
+        <di:waypoint x="1325" y="322" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1497" y="118" width="0" height="13" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Task_0ghyxrp_di" bpmnElement="Task_0ghyxrp">
+        <dc:Bounds x="1325" y="282" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DataObjectReference_00e5r0m_di" bpmnElement="DataObjectReference_00e5r0m" bioc:stroke="#000" bioc:fill="#fff">
+        <dc:Bounds x="942" y="390" width="36" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="941" y="443" width="40" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="DataOutputAssociation_17ismu1_di" bpmnElement="DataOutputAssociation_17ismu1">
+        <di:waypoint x="833" y="362" />
+        <di:waypoint x="833" y="411" />
+        <di:waypoint x="942" y="411" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Participant_1h2vp4x_di" bpmnElement="Participant_1h2vp4x">
+        <dc:Bounds x="286" y="11" width="656" height="212" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="MessageFlow_1rz7yoa_di" bpmnElement="MessageFlow_1rz7yoa" bioc:stroke="#000" bioc:fill="#fff">
+        <di:waypoint x="354" y="-105" />
+        <di:waypoint x="354" y="145" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="364" y="-77" width="35" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="DataObjectReference_19b297l_di" bpmnElement="DataObjectReference_19b297l" bioc:stroke="#000" bioc:fill="#fff">
+        <dc:Bounds x="393" y="31" width="36" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="394" y="84" width="34" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="DataInputAssociation_1jkwdte_di" bpmnElement="DataInputAssociation_1jkwdte">
+        <di:waypoint x="429" y="73" />
+        <di:waypoint x="477" y="73" />
+        <di:waypoint x="477" y="123" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="SendTask_0ejz347_di" bpmnElement="Task_0z0hvp5">
+        <dc:Bounds x="450" y="123" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1p9n8ok_di" bpmnElement="SequenceFlow_1p9n8ok">
+        <di:waypoint x="416" y="-145" />
+        <di:waypoint x="462" y="-145" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="439" y="-166.5" width="0" height="13" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="MessageFlow_1up1uey_di" bpmnElement="MessageFlow_1up1uey" bioc:stroke="#000" bioc:fill="#fff">
+        <di:waypoint x="500" y="123" />
+        <di:waypoint x="500" y="-105" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="508" y="63" width="49" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="DataObjectReference_1pset1o_di" bpmnElement="DataObjectReference_1pset1o" bioc:stroke="#000" bioc:fill="#fff">
+        <dc:Bounds x="561" y="-256" width="36" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="563" y="-203" width="34" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="DataOutputAssociation_032jle9_di" bpmnElement="DataOutputAssociation_032jle9">
+        <di:waypoint x="512" y="-185" />
+        <di:waypoint x="512" y="-229" />
+        <di:waypoint x="561" y="-229" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0ckdfe0_di" bpmnElement="SequenceFlow_0ckdfe0">
+        <di:waypoint x="562" y="-145" />
+        <di:waypoint x="614" y="-145" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="588" y="-166.5" width="0" height="13" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DataInputAssociation_06xarxh_di" bpmnElement="DataInputAssociation_06xarxh">
+        <di:waypoint x="597" y="-231" />
+        <di:waypoint x="659" y="-231" />
+        <di:waypoint x="659" y="-185" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="SendTask_0eu454q_di" bpmnElement="Task_02nb2qf">
+        <dc:Bounds x="614" y="-185" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0jw8apt_di" bpmnElement="SequenceFlow_0jw8apt">
+        <di:waypoint x="550" y="163" />
+        <di:waypoint x="602" y="163" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="588" y="490.5" width="0" height="13" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="MessageFlow_0vzlcyh_di" bpmnElement="MessageFlow_0vzlcyh" bioc:stroke="#000" bioc:fill="#fff">
+        <di:waypoint x="664" y="-105" />
+        <di:waypoint x="664" y="123" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="669" y="-30" width="56" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ReceiveTask_0mhh2md_di" bpmnElement="Task_0lmmxss">
+        <dc:Bounds x="602" y="123" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1tznivc_di" bpmnElement="SequenceFlow_1tznivc">
+        <di:waypoint x="702" y="163" />
+        <di:waypoint x="752" y="163" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="739" y="490.5" width="0" height="13" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="EndEvent_1leh9md_di" bpmnElement="EndEvent_1leh9md">
+        <dc:Bounds x="886" y="145" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1014" y="533" width="0" height="13" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0ysrxly_di" bpmnElement="SequenceFlow_0ysrxly">
+        <di:waypoint x="852" y="163" />
+        <di:waypoint x="886" y="163" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="885" y="490.5" width="0" height="13" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="MessageFlow_0pglov5_di" bpmnElement="MessageFlow_0pglov5" bioc:stroke="#000" bioc:fill="#fff">
+        <di:waypoint x="802" y="203" />
+        <di:waypoint x="802" y="282" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="794" y="236" width="61" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="EndEvent_09qxqia_di" bpmnElement="EndEvent_09qxqia">
+        <dc:Bounds x="1455" y="304" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1749.643" y="161" width="0" height="13" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1ueykdk_di" bpmnElement="SequenceFlow_1ueykdk">
+        <di:waypoint x="1425" y="322" />
+        <di:waypoint x="1455" y="322" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1714.5" y="118" width="0" height="13" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0ictql2_di" bpmnElement="SequenceFlow_0ictql2">
+        <di:waypoint x="714" y="-145" />
+        <di:waypoint x="761" y="-145" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="737.5" y="-166.5" width="0" height="13" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="MessageFlow_10v526h_di" bpmnElement="MessageFlow_10v526h" bioc:stroke="#000" bioc:fill="#fff">
+        <di:waypoint x="960" y="282" />
+        <di:waypoint x="960" y="-4" />
+        <di:waypoint x="800" y="-4" />
+        <di:waypoint x="800" y="-105" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="869" y="-25" width="22" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Task_0l1uq12_di" bpmnElement="Task_0l1uq12">
+        <dc:Bounds x="908.280701754386" y="-185" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0t550x4_di" bpmnElement="SequenceFlow_0t550x4">
+        <di:waypoint x="861" y="-145" />
+        <di:waypoint x="908" y="-145" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="884.5" y="-166.5" width="0" height="13" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_13j096q_di" bpmnElement="SequenceFlow_13j096q">
+        <di:waypoint x="1008" y="-145" />
+        <di:waypoint x="1045" y="-145" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1026.5" y="-166.5" width="0" height="13" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="MessageFlow_1tn79ux_di" bpmnElement="MessageFlow_1tn79ux" bioc:stroke="#000" bioc:fill="#fff">
+        <di:waypoint x="1237" y="282" />
+        <di:waypoint x="1237" y="-17" />
+        <di:waypoint x="1095" y="-17" />
+        <di:waypoint x="1095" y="-105" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1142" y="-38" width="51" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ExclusiveGateway_1f4410z_di" bpmnElement="ExclusiveGateway_1f4410z" isMarkerVisible="true" bioc:stroke="#000" bioc:fill="#fff">
+        <dc:Bounds x="1188.280701754386" y="-170" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1238" y="-157" width="57" height="24" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_109y63o_di" bpmnElement="SequenceFlow_109y63o">
+        <di:waypoint x="1145" y="-145" />
+        <di:waypoint x="1188" y="-145" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1166.5" y="-166.5" width="0" height="13" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="EndEvent_06rffyr_di" bpmnElement="EndEvent_06rffyr">
+        <dc:Bounds x="1293.280701754386" y="-233.0161943319838" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1311.280701754386" y="-194.0161943319838" width="0" height="13" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_19xaayl_di" bpmnElement="SequenceFlow_19xaayl" bioc:stroke="#000" bioc:fill="#fff">
+        <di:waypoint x="1213" y="-170" />
+        <di:waypoint x="1213" y="-215" />
+        <di:waypoint x="1293" y="-215" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1205.7162162162163" y="-237" width="37" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="EndEvent_115d44b_di" bpmnElement="EndEvent_115d44b">
+        <dc:Bounds x="1293" y="-102.0161943319838" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1311" y="-63.0161943319838" width="0" height="13" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1sf8ixw_di" bpmnElement="SequenceFlow_1sf8ixw" bioc:stroke="#000" bioc:fill="#fff">
+        <di:waypoint x="1213" y="-120" />
+        <di:waypoint x="1213" y="-84" />
+        <di:waypoint x="1293" y="-84" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1209.7027027027027" y="-77" width="30" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ReceiveTask_1uu2egi_di" bpmnElement="Task_00qpirs">
+        <dc:Bounds x="462" y="-185" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DataObjectReference_18e0s05_di" bpmnElement="DataObjectReference_18e0s05" bioc:stroke="#000" bioc:fill="#fff">
+        <dc:Bounds x="275.56678281068525" y="-256" width="36" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="275" y="-203" width="38" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="DataInputAssociation_1efkzm4_di" bpmnElement="DataInputAssociation_1efkzm4">
+        <di:waypoint x="312" y="-231" />
+        <di:waypoint x="348" y="-231" />
+        <di:waypoint x="348" y="-185" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="SendTask_0y43eh4_di" bpmnElement="Task_1xsnpge">
+        <dc:Bounds x="752" y="123" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="DataInputAssociation_0j3opq2_di" bpmnElement="DataInputAssociation_0j3opq2">
+        <di:waypoint x="946" y="390" />
+        <di:waypoint x="946" y="362" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DataOutputAssociation_0s2g65w_di" bpmnElement="DataOutputAssociation_0s2g65w">
+        <di:waypoint x="1211" y="362" />
+        <di:waypoint x="1211" y="429" />
+        <di:waypoint x="978" y="431" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ReceiveTask_0hpbl0h_di" bpmnElement="Task_0fhreho">
+        <dc:Bounds x="761" y="-185" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ReceiveTask_0ovi3ov_di" bpmnElement="Task_16xymjs">
+        <dc:Bounds x="1045" y="-185" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DataObjectReference_1h864w7_di" bpmnElement="DataObjectReference_1h864w7" bioc:stroke="#000" bioc:fill="#fff">
+        <dc:Bounds x="793" y="-268" width="36" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="782" y="-292" width="57" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="DataOutputAssociation_1ds3xm5_di" bpmnElement="DataOutputAssociation_1ds3xm5">
+        <di:waypoint x="366" y="-185" />
+        <di:waypoint x="366" y="-258" />
+        <di:waypoint x="793" y="-258" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DataOutputAssociation_00udunh_di" bpmnElement="DataOutputAssociation_00udunh">
+        <di:waypoint x="677" y="-185" />
+        <di:waypoint x="677" y="-229" />
+        <di:waypoint x="793" y="-229" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="DataObjectReference_1mutzey_di" bpmnElement="DataObjectReference_1mutzey" bioc:stroke="#000" bioc:fill="#fff">
+        <dc:Bounds x="709" y="31" width="36" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="708" y="88" width="38" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="DataOutputAssociation_01b9ul3_di" bpmnElement="DataOutputAssociation_01b9ul3">
+        <di:waypoint x="683" y="123" />
+        <di:waypoint x="683" y="75" />
+        <di:waypoint x="709" y="75" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DataInputAssociation_01brd79_di" bpmnElement="DataInputAssociation_01brd79">
+        <di:waypoint x="745" y="56" />
+        <di:waypoint x="768" y="56" />
+        <di:waypoint x="768" y="123" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="StartEvent_1hg3cnq_di" bpmnElement="StartEvent_1hg3cnq">
+        <dc:Bounds x="534" y="304" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_039mlf2_di" bpmnElement="Task_039mlf2">
+        <dc:Bounds x="611" y="282" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0mt3r0f_di" bpmnElement="SequenceFlow_0mt3r0f">
+        <di:waypoint x="570" y="322" />
+        <di:waypoint x="611" y="322" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1vjy1bv_di" bpmnElement="SequenceFlow_1vjy1bv">
+        <di:waypoint x="711" y="322" />
+        <di:waypoint x="758" y="322" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ReceiveTask_0oisvjg_di" bpmnElement="Task_0mkmvsu" bioc:stroke="black" bioc:fill="white">
+        <dc:Bounds x="758" y="282" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DataObjectReference_1lhmzs5_di" bpmnElement="DataObjectReference_1lhmzs5" bioc:stroke="#000" bioc:fill="#fff">
+        <dc:Bounds x="664" y="390" width="36" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="653" y="447" width="59" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="DataOutputAssociation_11kacxl_di" bpmnElement="DataOutputAssociation_11kacxl">
+        <di:waypoint x="771" y="362" />
+        <di:waypoint x="771" y="415" />
+        <di:waypoint x="700" y="415" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DataOutputAssociation_062wic3_di" bpmnElement="DataOutputAssociation_062wic3">
+        <di:waypoint x="1099" y="362" />
+        <di:waypoint x="1099" y="413" />
+        <di:waypoint x="978" y="415" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1oje7q9_di" bpmnElement="SequenceFlow_1oje7q9">
+        <di:waypoint x="858" y="322" />
+        <di:waypoint x="910" y="322" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DataInputAssociation_04rmmc9_di" bpmnElement="DataInputAssociation_04rmmc9">
+        <di:waypoint x="811" y="-218" />
+        <di:waypoint x="811" y="-185" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DataOutputAssociation_09hnevp_di" bpmnElement="DataOutputAssociation_09hnevp">
+        <di:waypoint x="1095" y="-185" />
+        <di:waypoint x="1095" y="-243" />
+        <di:waypoint x="829" y="-243" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="StartEvent_0m2y4kt_di" bpmnElement="StartEvent_0ida8on">
+        <dc:Bounds x="336" y="145" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0oiv31a_di" bpmnElement="SequenceFlow_0oiv31a">
+        <di:waypoint x="372" y="163" />
+        <di:waypoint x="450" y="163" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

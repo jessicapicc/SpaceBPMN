@@ -1,0 +1,11 @@
+Title:
+Paper Review
+
+Description:
+The collaboration model in Fig. 1 combines the activities of three participants. The Program Committee (PC) Chair organises the reviewing activities. For the sake of sim- plicity, we assume that the considered conference has only one chair. A Reviewer per- forms the reviewing activity and, since more than one reviewer takes part in this, he/she is modelled as a process instance of a multi-instance pool. Finally, the Contact Author is the person who submitted the paper to the conference. The reviewing process is started by the PC chair, who assigns the paper to each reviewer (via a multi-instance sequential activity with loop cardinality set to 3 according to the number of involved reviewers for each paper). The paper is passed to the PC chair process by means of a data input. After all reviews are received, and combined in the Reviews data object, the chair starts their evaluation. According to the value of the Evaluation data object, the chair prepares the acceptance/rejection letter (stored in the Letter data object) or, if the paper requires further discussion, the decision is postponed. Discussion interactions are here abstracted and always result in an accept or reject decision. The chair then sends back a feedback to each reviewer, attaches the reviews to the notification letter, and sends the result to the contact author.
+
+Versions:
+PaperReview.bpmn - Correct version
+PaperReview_issue1.bpmn - Guard violation - Paper Review task in Reviewer pool miss to assign PaperReview_body, hence the guard of Submit Review task is violated.
+PaperReview_issue2.bpmn - Instance cardinality mismatch - Send Feedback task in pool PC Chair has loopCardinality set to 2 instead of 3, thus one reviewer can not complete its process.
+PaperReview_issue3.bpmn - Blocking XOR split - Condition expression in 'What is the reviewer decision?' gateway use Evaluation_title field instead of Evaluation_decision.

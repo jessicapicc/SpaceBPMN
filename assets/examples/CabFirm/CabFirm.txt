@@ -1,0 +1,12 @@
+Title:
+Cab Firm
+
+Description:
+Model a BPMN collaboration showing a cab booking process among a cab firm, taxi drivers and customers. The collaboration starts any time a new
+customer contacts the cab firm to book a taxi in order to reach a destination. Once the cab firm receives the message queries the database until
+it finds an available taxi driver. Then, the firm communicates the ride to the selected drive that can accept or not. Depending on its decision,
+the driver update its availability and reach the customer position. Once he/she has been picked up, the customer provides the destination to the
+driver, and then pay the ride. Finally, the driver becomes available again.
+
+Versions:
+CabFirm.bpmn - Correct version

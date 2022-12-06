@@ -1,0 +1,15 @@
+Title:
+Cake
+
+Description:
+The example illustrates the collaboration between a Pastry Chef and his Assistants in the preparation of a
+three-layer cake with decorations, as requested by a Customer. In particular, the collaboration model combines the
+activities of the involved participants as following. The Customer provides details about the desired cake and checks
+the final result. The Pastry Chef coordinates the activity of the Assistants, combines the layers to assemble the cake,
+and delivers it to the Customer. Finally, the Assistant is the one in charge to prepare the layers of the cake.
+
+Versions:
+Cake.bpmn - Correct version - One Customer requiring a cake to one Pastry Chef that delegates the work to 3 Assistants
+Cakev1.bpmn - Correct version - One Customer requiring 2 different cakes to 2 Pastry Chefs that delegates the work to 3+3 Assistants
+Cakev2.bpmn - Correct version - Two Customers requiring 2 different cakes to 2 Pastry Chef that delegates the work to 3+3 Assistants
+Cakev3.bpmn - Correct version - Two Customers requiring 2 different cakes to 2 Pastry Chef that delegates the work to 3+3 Assistants. The Customers judge the cake togheter.

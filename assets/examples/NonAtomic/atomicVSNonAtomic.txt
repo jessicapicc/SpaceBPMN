@@ -1,0 +1,14 @@
+Title:
+AtomicVSNonAtomic
+
+Description:
+The diagram provides a minimal example showing the impact of task type on the overall process execution.
+The process consists in performing firstly Task A then, concurrently Task B and Task C, when both complete the process ends.
+All the tasks can access to the data object Data that contains three fields a, b, and c. Moreover considering guard and
+assignments we refer to the following specification. Task A has no guard condition and makes the assignment Data.a = 1.
+Both Task B and Task C have the same guard condition that is Data.a == 0. Regarding assignments, Task B performs Data.b = 2
+and Data.a = 0, while Task C makes Data.c = 5 and Data.a = 0.
+
+Versions:
+nonatomictask.bpmn - Non Atomic version
+atomictask.bpmn - Atomic version
