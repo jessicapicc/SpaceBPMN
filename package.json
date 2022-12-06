@@ -38,7 +38,7 @@
   "devDependencies": {
     "@mdi/js": "^7.0.96",
     "bpmn-font": "^0.10.0",
-    "bpmn-js": "^8.8.2",
+    "bpmn-js": "^2.4.1",
     "copy-webpack-plugin": "^4.5.2",
     "downloadjs": "^1.4.7",
     "file-open": "^0.1.1",
