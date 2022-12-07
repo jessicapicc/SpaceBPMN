@@ -1,13 +1,12 @@
 /* global process */
 
-'use strict';
-
+'use strict'; 
+import $ from 'jquery';
 import TokenSimulationModule from '..';
 
 import BpmnModeler from 'bpmn-js/lib/Modeler';
 
 import AddExporter from '@bpmn-io/add-exporter';
-
 import {
   BpmnPropertiesPanelModule,
   BpmnPropertiesProviderModule
@@ -22,7 +21,6 @@ import download from 'downloadjs';
 import exampleXML from '../example/resources/example.bpmn';
 
 const url = new URL(window.location.href);
-
 const persistent = url.searchParams.has('p');
 const active = url.searchParams.has('e');
 const presentationMode = url.searchParams.has('pm');
@@ -150,6 +148,40 @@ function openFile(files) {
 
 document.body.addEventListener('dragover', fileDrop('Open BPMN diagram', openFile), false);
 
+
+function loadDiagram(xml) {
+  var fileInput = document.createElement("input");
+  document.body.appendChild(fileInput);
+
+  $(fileInput).attr({ 'type': 'file' }).on('change', function (e) {
+      var file = e.target.files[0];
+      var reader = new FileReader();
+      if (file) {
+      reader.readAsText(file, "UTF-8");
+      reader.onload = function (evt) {
+
+          var bpmnXML = evt.target.result;
+          modeler.importXML(bpmnXML, function(err) {
+        if (err) {
+          return console.error('could not import BPMN 2.0 diagram', err);
+        }
+        // access modeler components
+        var canvas = modeler.get('canvas');
+        var overlays = modeler.get('overlays');
+        // zoom to fit full viewport
+        canvas.zoom('fit-viewport');
+      });
+      }
+      reader.onerror = function (evt) {
+          document.getElementById("fileContents").innerHTML = "error reading file";
+      }
+    }
+    }).trigger('click');
+    document.body.removeChild(fileInput);
+  }
+
+document.querySelector("#open-diagram").addEventListener('click', (e) =>loadDiagram(e.currentTarget.file));
+
 function downloadDiagram() {
   modeler.saveXML({ format: true }, function(err, xml) {
     if (!err) {
@@ -175,7 +207,6 @@ document.body.addEventListener('keydown', function(event) {
 document.querySelector('#download-button').addEventListener('click', function(event) {
   downloadDiagram();
 });
-
 
 const propertiesPanel = document.querySelector('#properties-panel');
 
@@ -251,3 +282,69 @@ if (remoteDiagram) {
 }
 
 toggleProperties(url.searchParams.has('pp'));
+
+// part for the divider 
+
+/*var dragTarget = undefined;
+window.addEventListener('mousemove', function (e) {
+  dragmove(e);
+});
+window.addEventListener('touchmove', function (e) {
+  dragmove(e);
+});
+window.addEventListener('mouseup', dragend);
+window.addEventListener('touchend', dragend);
+(0, _jquery.default)('.divider').each((index, divider) => {
+  divider.addEventListener('mousedown', function (e) {
+    dragstart(e);
+  });
+  divider.addEventListener('touchstart', function (e) {
+    dragstart(e);
+  });
+});
+
+function dragstart(e) {
+  e.preventDefault();
+  dragTarget = e.target;
+}
+
+function dragmove(e) {
+  if (dragTarget) {
+    dragTarget.classList.add('dragged');
+    var parent = (0, _jquery.default)(dragTarget).parent()[0];
+    var parentStyle = window.getComputedStyle(parent);
+    var prev = (0, _jquery.default)(dragTarget).prev('div')[0];
+    var next = (0, _jquery.default)(dragTarget).next('div')[0];
+
+    if (dragTarget.classList.contains('vertical')) {
+      var parentInnerWidth = parseInt(parentStyle.width, 10) - parseInt(parentStyle.paddingLeft, 10) - parseInt(parentStyle.paddingRight, 10);
+      var percentage = (e.pageX - (parent.getBoundingClientRect().left + parseInt(parentStyle.paddingLeft, 10))) / parentInnerWidth * 100;
+
+      if (percentage > 5 && percentage < 95) {
+        var mainPercentage = 100 - percentage;
+        prev.style.width = percentage + '%';
+        next.style.width = mainPercentage + '%';
+        dragTarget.style.left = 'calc(' + percentage * (parentInnerWidth / parseInt(parentStyle.width, 10)) + '% - 10px - ' + parentStyle.paddingLeft + ')';
+        next.style.left = 0 + '%';
+      }
+    } else {
+      var parentInnerHeight = parseInt(parentStyle.height, 10) - parseInt(parentStyle.paddingTop, 10) - parseInt(parentStyle.paddingBottom, 10);
+      var percentage = (e.pageY - (parent.getBoundingClientRect().top + parseInt(parentStyle.paddingTop, 10))) / parentInnerHeight * 100;
+
+      if (percentage > 5 && percentage < 95) {
+        var mainPercentage = 100 - percentage;
+        prev.style.height = percentage + '%';
+        next.style.height = mainPercentage + '%';
+        dragTarget.style.top = 'calc(' + percentage * (parentInnerHeight / parseInt(parentStyle.height, 10)) + '% - 10px + ' + parentStyle.paddingTop + ')';
+        next.style.top = 0 + '%';
+      }
+    }
+  }
+}
+
+function dragend() {
+  (0, _jquery.default)('.divider').each((index, divider) => {
+    divider.classList.remove('dragged');
+  });
+  dragTarget = undefined;
+}*/

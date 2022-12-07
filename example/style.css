@@ -10,6 +10,8 @@ html, body, #canvas {
   font-size: 12px;
 
   color: var(--token-simulation-grey-darken-30, #212121);
+  display: flex;
+  flex-direction: column;
 }
 
 body:not(.presentation-mode) .bts-notifications {
@@ -18,18 +20,6 @@ body:not(.presentation-mode) .bts-notifications {
 
 .links, .drop-message {
   z-index: 1;
-}
-
-.top-links {
-  position: absolute;
-  top: 24px;
-  right: 24px;
-}
-
-.bottom-links {
-  position: absolute;
-  bottom: 24px;
-  left: 24px;
 }
 
 .link {
@@ -58,13 +48,9 @@ body:not(.presentation-mode) .bts-notifications {
 }
 
 .canvas-parent {
-  position: absolute;
-  left: 0;
-  top: 50px;
-  bottom: 0;
-  right: 0;
-
-  display: flex;
+  display: inline-flex;
+  width: 100%;
+  height: 100%;
 }
 
 .canvas, .properties-panel {
@@ -86,7 +72,7 @@ body:not(.presentation-mode) .bts-notifications {
 }
 
 .properties-panel {
-  position: relative;
+  position: inherit;
 }
 
 .token-simulation-active .bio-properties-panel-container {
@@ -107,7 +93,6 @@ body:not(.presentation-mode) .bts-notifications {
   bottom: 0;
   width: 22px;
   z-index: 3;
-
   cursor:  e-resize;
 }
 
@@ -135,7 +120,6 @@ body:not(.presentation-mode) .bts-notifications {
 .bio-properties-panel-container {
   width: 100%;
 }
-
 
 /** file-drops */
 
@@ -182,8 +166,64 @@ body:not(.presentation-mode) .bts-notifications {
   font-size: 26px;
   color: #888;
   margin: auto;
-
   display: table-cell;
   vertical-align: middle;
 }
 
+/** page organizer */
+
+.mainContent {
+  position: absolute;
+  left: 0;
+  top: 50px;
+  bottom: 0;
+  right: 0;
+  display: flex;
+}
+
+.contentLeft{
+  width: 70%;
+  height: 100%;
+  display: flex;
+}
+
+.contentRight{
+  width: 30%;
+  height: 100%;
+  display: flex;
+}
+
+.divider {
+  float: none;
+  overflow: hidden;
+  background-color: transparent;
+  position:absolute;
+  z-index: 100;
+  --thickness: 20px;
+}
+
+.divider:after {
+  content: '';
+  display: block;
+  --border-width: 6px;
+  --offset: calc((var(--thickness) - var(--border-width)) / 2);
+  --border-style: var(--border-width) dotted rgba(150,150,150,1);
+}
+
+.divider.dragged {
+  --thickness: 20px;
+  background-color: rgba(150,150,150,0.5);
+}
+
+.divider.vertical {
+  width: var(--thickness);
+  height: 100%;
+  left: calc(70% - 10px);
+  cursor: w-resize;
+}
+
+.divider.vertical:after {
+  margin-left: var(--offset);
+  border-left: var(--border-style);
+  height: 100%;
+}
