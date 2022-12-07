@@ -20,10 +20,14 @@ import download from 'downloadjs';
 
 import exampleXML from '../example/resources/example.bpmn';
 
+import OlcModeler from './lib/olcmodeler/OlcModeler';
+import Mediator from './lib/mediator/Mediator';
+
 const url = new URL(window.location.href);
 const persistent = url.searchParams.has('p');
 const active = url.searchParams.has('e');
 const presentationMode = url.searchParams.has('pm');
+
 
 let fileName = 'diagram.bpmn';
 
@@ -148,7 +152,7 @@ function openFile(files) {
 
 document.body.addEventListener('dragover', fileDrop('Open BPMN diagram', openFile), false);
 
-
+//open diagram
 function loadDiagram(xml) {
   var fileInput = document.createElement("input");
   document.body.appendChild(fileInput);
@@ -182,6 +186,7 @@ function loadDiagram(xml) {
 
 document.querySelector("#open-diagram").addEventListener('click', (e) =>loadDiagram(e.currentTarget.file));
 
+//download diagram
 function downloadDiagram() {
   modeler.saveXML({ format: true }, function(err, xml) {
     if (!err) {
@@ -283,68 +288,74 @@ if (remoteDiagram) {
 
 toggleProperties(url.searchParams.has('pp'));
 
-// part for the divider 
+// part for dynamism of the divider 
 
-/*var dragTarget = undefined;
-window.addEventListener('mousemove', function (e) {
-  dragmove(e);
-});
-window.addEventListener('touchmove', function (e) {
-  dragmove(e);
-});
+var dragTarget = undefined;
+
+window.addEventListener('mousemove', function (e) { dragmove(e); });
+window.addEventListener('touchmove', function (e) { dragmove(e); });
 window.addEventListener('mouseup', dragend);
 window.addEventListener('touchend', dragend);
-(0, _jquery.default)('.divider').each((index, divider) => {
-  divider.addEventListener('mousedown', function (e) {
-    dragstart(e);
-  });
-  divider.addEventListener('touchstart', function (e) {
-    dragstart(e);
-  });
+$('.divider').each((index, divider) => {
+    divider.addEventListener('mousedown', function (e) { dragstart(e); });
+    divider.addEventListener('touchstart', function (e) { dragstart(e); });
 });
 
 function dragstart(e) {
-  e.preventDefault();
-  dragTarget = e.target;
+    e.preventDefault();
+    dragTarget = e.target;
 }
 
 function dragmove(e) {
-  if (dragTarget) {
-    dragTarget.classList.add('dragged');
-    var parent = (0, _jquery.default)(dragTarget).parent()[0];
-    var parentStyle = window.getComputedStyle(parent);
-    var prev = (0, _jquery.default)(dragTarget).prev('div')[0];
-    var next = (0, _jquery.default)(dragTarget).next('div')[0];
-
-    if (dragTarget.classList.contains('vertical')) {
-      var parentInnerWidth = parseInt(parentStyle.width, 10) - parseInt(parentStyle.paddingLeft, 10) - parseInt(parentStyle.paddingRight, 10);
-      var percentage = (e.pageX - (parent.getBoundingClientRect().left + parseInt(parentStyle.paddingLeft, 10))) / parentInnerWidth * 100;
-
-      if (percentage > 5 && percentage < 95) {
-        var mainPercentage = 100 - percentage;
-        prev.style.width = percentage + '%';
-        next.style.width = mainPercentage + '%';
-        dragTarget.style.left = 'calc(' + percentage * (parentInnerWidth / parseInt(parentStyle.width, 10)) + '% - 10px - ' + parentStyle.paddingLeft + ')';
-        next.style.left = 0 + '%';
-      }
-    } else {
-      var parentInnerHeight = parseInt(parentStyle.height, 10) - parseInt(parentStyle.paddingTop, 10) - parseInt(parentStyle.paddingBottom, 10);
-      var percentage = (e.pageY - (parent.getBoundingClientRect().top + parseInt(parentStyle.paddingTop, 10))) / parentInnerHeight * 100;
-
-      if (percentage > 5 && percentage < 95) {
-        var mainPercentage = 100 - percentage;
-        prev.style.height = percentage + '%';
-        next.style.height = mainPercentage + '%';
-        dragTarget.style.top = 'calc(' + percentage * (parentInnerHeight / parseInt(parentStyle.height, 10)) + '% - 10px + ' + parentStyle.paddingTop + ')';
-        next.style.top = 0 + '%';
-      }
+    if (dragTarget) {
+        dragTarget.classList.add('dragged')
+        var parent = $(dragTarget).parent()[0];
+        var parentStyle = window.getComputedStyle(parent);
+        var prev = $(dragTarget).prev('div')[0];
+        var next = $(dragTarget).next('div')[0];
+        if (dragTarget.classList.contains('vertical')) {
+            var parentInnerWidth = parseInt(parentStyle.width, 10) - parseInt(parentStyle.paddingLeft, 10) - parseInt(parentStyle.paddingRight, 10);
+            var percentage = ((e.pageX - (parent.getBoundingClientRect().left + parseInt(parentStyle.paddingLeft, 10))) / parentInnerWidth) * 100;
+            if (percentage > 5 && percentage < 95) {
+                var mainPercentage = 100 - percentage;
+                prev.style.width = percentage + '%';
+                next.style.width = mainPercentage + '%';
+                dragTarget.style.left = 'calc('+ percentage * (parentInnerWidth / parseInt(parentStyle.width, 10)) + '% - 10px - '+ parentStyle.paddingLeft +')';
+                next.style.left = 0 + '%';
+            }
+        } else {
+            var parentInnerHeight = parseInt(parentStyle.height, 10) - parseInt(parentStyle.paddingTop, 10) - parseInt(parentStyle.paddingBottom, 10);
+            var percentage = ((e.pageY - (parent.getBoundingClientRect().top + parseInt(parentStyle.paddingTop, 10))) / parentInnerHeight) * 100;
+            if (percentage > 5 && percentage < 95) {
+                var mainPercentage = 100 - percentage;
+                prev.style.height = percentage + '%';
+                next.style.height = mainPercentage + '%';
+                dragTarget.style.top = 'calc('+percentage * (parentInnerHeight / parseInt(parentStyle.height, 10)) + '% - 10px + ' + parentStyle.paddingTop +')';
+                next.style.top = 0 + '%';
+            }
+        }
     }
-  }
 }
 
 function dragend() {
-  (0, _jquery.default)('.divider').each((index, divider) => {
-    divider.classList.remove('dragged');
-  });
-  dragTarget = undefined;
-}*/
+    $('.divider').each((index, divider) => {
+        divider.classList.remove('dragged')
+    });
+    dragTarget = undefined;
+}
+
+
+//modeler for space
+var mediator = new Mediator();
+window.mediator = mediator;
+
+var olcModeler = new OlcModeler({
+    container: document.querySelector('#olc-canvas'),
+    keyboard: { 
+      bindTo: document.querySelector('#olc-canvas') 
+    },
+    additionalModules: [{
+      __init__ : ['mediator'],
+      mediator : ['type', mediator.OlcModelerHook]
+    }]
+});
