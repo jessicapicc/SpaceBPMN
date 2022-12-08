@@ -193,6 +193,7 @@ body:not(.presentation-mode) .bts-notifications {
   display: flex;
 }
 
+/** vertical divider */
 
 .divider {
   float: none;

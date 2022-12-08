@@ -1,11 +1,11 @@
 # SpaceBPMN
 
-##Usage
+Usage
 
-###Install dependences
+Install dependences
 
 `npm install`
 
-###Run Space BPMN
+Run Space BPMN
 
-`npm run start:example`
+`npm run dev`

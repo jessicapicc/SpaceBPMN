@@ -288,7 +288,8 @@ if (remoteDiagram) {
 
 toggleProperties(url.searchParams.has('pp'));
 
-// part for dynamism of the divider 
+
+// part for dynamism of the  vertical divider 
 
 var dragTarget = undefined;
 

@@ -1,13 +1,13 @@
 .topnav {
   overflow: hidden;
-  background-color: #495057;
+  background-color: #546c86;
   height: 50px;
 }
 
 .topnav a {
   float: left;
   display: block;
-  color:  #bca100;
+  color:  #fcfbfa;
   text-align: center;
   padding: 14px 16px;
   text-decoration: none;
@@ -55,7 +55,7 @@
 
 .topnav a:hover, .dropdown:hover .dropbtn {
   border: 2px solid;
-  color: #bca100;
+  color: #8babcd;
 }
 
 .dropdown-content a:hover {
