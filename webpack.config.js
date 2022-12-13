@@ -3,6 +3,11 @@
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const { DefinePlugin } = require('webpack');
 
+const path = require('path');
+
+const basePath = '.';
+
+const absoluteBasePath = path.resolve(path.join(__dirname, basePath));
 
 module.exports = (env, argv) => {
 
@@ -22,10 +27,38 @@ module.exports = (env, argv) => {
     },
     module: {
       rules: [
+        {test: /\.m?js$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            plugins: [
+              [ '@babel/plugin-transform-react-jsx', {
+                'importSource': '@bpmn-io/properties-panel/preact',
+                'runtime': 'automatic'
+              } ]
+            ]
+          }
+        }
+      },
         {
           test: /\.bpmn$/,
           type: 'asset/source'
         }
+      ]
+    },
+    resolve: {
+      mainFields: [
+        'browser',
+        'module',
+        'main'
+      ],
+      alias: {
+        'react': '@bpmn-io/properties-panel/preact/compat'
+      },
+      modules: [
+        'node_modules',
+        absoluteBasePath
       ]
     },
     plugins: [

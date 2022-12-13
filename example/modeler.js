@@ -12,13 +12,20 @@ import {
   BpmnPropertiesProviderModule
 } from 'bpmn-js-properties-panel';
 
+import magicPropertiesProviderModule from './lib/spacePropertiesPanel/spacePropertiesProvider/index.js';
+import magicModdleDescriptor from './lib/spacePropertiesPanel/descriptors/magic.json';
+
+import {
+  debounce
+} from 'min-dash';
+
 import fileDrop from 'file-drops';
 
 import fileOpen from 'file-open';
 
 import download from 'downloadjs';
 
-import exampleXML from '../example/resources/example.bpmn';
+import exampleXML from '../example/resources/newDiagram.bpmn';
 
 import OlcModeler from './lib/olcmodeler/OlcModeler';
 import Mediator from './lib/mediator/Mediator';
@@ -97,6 +104,7 @@ const modeler = new BpmnModeler({
   additionalModules: [
     BpmnPropertiesPanelModule,
     BpmnPropertiesProviderModule,
+    magicPropertiesProviderModule,
     TokenSimulationModule,
     AddExporter,
     ExampleModule
@@ -110,6 +118,9 @@ const modeler = new BpmnModeler({
   },
   keyboard: {
     bindTo: document
+  },
+  moddleExtensions: {
+    magic: magicModdleDescriptor
   }
 });
 
@@ -287,6 +298,39 @@ if (remoteDiagram) {
 }
 
 toggleProperties(url.searchParams.has('pp'));
+
+
+/*var exportArtifacts = debounce(async function() {
+
+  try {
+
+    const { svg } = await bpmnModeler.saveSVG();
+
+    setEncoded(downloadSvgLink, 'diagram.svg', svg);
+  } catch (err) {
+
+    console.error('Error happened saving SVG: ', err);
+
+    setEncoded(downloadSvgLink, 'diagram.svg', null);
+  }
+
+  try {
+
+    const { xml } = await bpmnModeler.saveXML({ format: true });
+
+    setEncoded(downloadLink, 'diagram.bpmn', xml);
+  } catch (err) {
+
+    console.error('Error happened saving diagram: ', err);
+
+    setEncoded(downloadLink, 'diagram.bpmn', null);
+  }
+}, 500);
+
+bpmnModeler.on('commandStack.changed', exportArtifacts);*/
+
+
+
 
 
 // part for dynamism of the  vertical divider 
