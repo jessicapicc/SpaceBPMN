@@ -12,8 +12,8 @@ import {
   BpmnPropertiesProviderModule
 } from 'bpmn-js-properties-panel';
 
-import magicPropertiesProviderModule from './lib/spacePropertiesPanel/spacePropertiesProvider/index.js';
-import magicModdleDescriptor from './lib/spacePropertiesPanel/descriptors/magic.json';
+import spacePropertiesProviderModule from './lib/spacePropertiesPanel/spacePropertiesProvider/index.js';
+import spaceModdleDescriptor from './lib/spacePropertiesPanel/descriptors/magic.json';
 
 import {
   debounce
@@ -25,7 +25,7 @@ import fileOpen from 'file-open';
 
 import download from 'downloadjs';
 
-import exampleXML from '../example/resources/newDiagram.bpmn';
+import exampleXML from '../example/resources/example.bpmn';
 
 import OlcModeler from './lib/olcmodeler/OlcModeler';
 import Mediator from './lib/mediator/Mediator';
@@ -104,7 +104,7 @@ const modeler = new BpmnModeler({
   additionalModules: [
     BpmnPropertiesPanelModule,
     BpmnPropertiesProviderModule,
-    magicPropertiesProviderModule,
+    spacePropertiesProviderModule,
     TokenSimulationModule,
     AddExporter,
     ExampleModule
@@ -120,7 +120,7 @@ const modeler = new BpmnModeler({
     bindTo: document
   },
   moddleExtensions: {
-    magic: magicModdleDescriptor
+    space: spaceModdleDescriptor
   }
 });
 

@@ -1,6 +1,6 @@
-import MagicPropertiesProvider from './MagicPropertiesProvider';
+import SpacePropertiesProvider from './SpacePropertiesProvider';
 
 export default {
-  __init__: [ 'magicPropertiesProvider' ],
-  magicPropertiesProvider: [ 'type', MagicPropertiesProvider ]
+  __init__: [ 'spacePropertiesProvider' ],
+  spacePropertiesProvider: [ 'type', SpacePropertiesProvider ]
 };

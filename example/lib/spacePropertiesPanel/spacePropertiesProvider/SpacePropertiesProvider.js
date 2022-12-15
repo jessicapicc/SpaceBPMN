@@ -1,7 +1,7 @@
 // Import your custom property entries.
 // The entry is a text input field with logic attached to create,
 // update and delete the "spell" property.
-import spellProps from './parts/SpellProps';
+import spaceProps from './parts/SpaceProps';
 
 import { is } from 'bpmn-js/lib/util/ModelUtil';
 
@@ -15,7 +15,7 @@ const LOW_PRIORITY = 500;
  * @param {PropertiesPanel} propertiesPanel
  * @param {Function} translate
  */
-export default function MagicPropertiesProvider(propertiesPanel, translate) {
+export default function SpacePropertiesProvider(propertiesPanel, translate) {
 
   // API ////////
 
@@ -39,8 +39,8 @@ export default function MagicPropertiesProvider(propertiesPanel, translate) {
     return function(groups) {
 
       // Add the "magic" group
-      if(is(element, 'bpmn:StartEvent')) {
-        groups.push(createMagicGroup(element, translate));
+      if(is(element, 'bpmn:Task')) {
+        groups.push(createSpaceGroup(element, translate));
       }
 
       return groups;
@@ -56,17 +56,17 @@ export default function MagicPropertiesProvider(propertiesPanel, translate) {
   propertiesPanel.registerProvider(LOW_PRIORITY, this);
 }
 
-MagicPropertiesProvider.$inject = [ 'propertiesPanel', 'translate' ];
+SpacePropertiesProvider.$inject = [ 'propertiesPanel', 'translate' ];
 
 // Create the custom magic group
-function createMagicGroup(element, translate) {
+function createSpaceGroup(element, translate) {
 
   // create a group called "Magic properties".
-  const magicGroup = {
-    id: 'magic',
-    label: translate('Magic properties'),
-    entries: spellProps(element)
+  const spaceGroup ={
+    id: 'space',
+    label: translate('SpaceBPMN properties'),
+    entries: spaceProps(element)
   };
 
-  return magicGroup
+  return spaceGroup
 }
