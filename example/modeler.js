@@ -13,7 +13,7 @@ import {
 } from 'bpmn-js-properties-panel';
 
 import spacePropertiesProviderModule from './lib/spacePropertiesPanel/spacePropertiesProvider/index.js';
-import spaceModdleDescriptor from './lib/spacePropertiesPanel/descriptors/magic.json';
+import spaceModdleDescriptor from './lib/spacePropertiesPanel/descriptors/space.json';
 
 import {
   debounce

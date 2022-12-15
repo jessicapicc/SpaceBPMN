@@ -16,7 +16,7 @@
         {
           "name": "guard",
           "isAttr": true,
-          "type": "String"
+          "type": "Boolean"
         },
         {
           "name": "destination",
@@ -26,12 +26,12 @@
         {
           "name": "velocity",
           "isAttr": true,
-          "type": "String"
+          "type": "Integer"
         },
         {
           "name": "duration",
           "isAttr": true,
-          "type": "String"
+          "type": "Integer"
         }
       ]
     }

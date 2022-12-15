@@ -1,4 +1,4 @@
-import { TextFieldEntry, isTextFieldEntryEdited, isNumberFieldEntryEdited } from '@bpmn-io/properties-panel';
+import { TextFieldEntry, NumberFieldEntry, isTextFieldEntryEdited, isNumberFieldEntryEdited } from '@bpmn-io/properties-panel';
 import { useService } from 'bpmn-js-properties-panel';
 
 export default function(element) {
@@ -103,7 +103,7 @@ function Velocity(props) {
       velocity: value
     });
   }
-  return <TextFieldEntry
+  return <NumberFieldEntry
   id={ id }
   element={ element }
   description={ translate('Define robot velocity') }
@@ -131,7 +131,7 @@ function Duration(props) {
     });
   }
 
-  return <TextFieldEntry
+  return <NumberFieldEntry
   id={ id }
   element={ element }
   description={ translate('Must be integer number') }
