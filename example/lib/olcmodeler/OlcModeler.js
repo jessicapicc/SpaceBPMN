@@ -25,7 +25,6 @@ import OlcPaletteModule from './palette';
 import OlcDrawModule from './draw';
 import OlcRulesModule from './rules';
 import OlcModelingModule from './modeling';
-import OlcButtonBarModule from './buttonbar';
 import OlcAutoPlaceModule from './auto-place';
 
 import OlcModdle from './moddle';
@@ -93,7 +92,6 @@ export default function OlcModeler(options) {
     OlcDrawModule,
     OlcRulesModule,
     OlcModelingModule,
-    OlcButtonBarModule,
     OlcAutoPlaceModule,
     {
       moddle: ['value', new OlcModdle({})],

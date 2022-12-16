@@ -299,40 +299,6 @@ if (remoteDiagram) {
 
 toggleProperties(url.searchParams.has('pp'));
 
-
-/*var exportArtifacts = debounce(async function() {
-
-  try {
-
-    const { svg } = await bpmnModeler.saveSVG();
-
-    setEncoded(downloadSvgLink, 'diagram.svg', svg);
-  } catch (err) {
-
-    console.error('Error happened saving SVG: ', err);
-
-    setEncoded(downloadSvgLink, 'diagram.svg', null);
-  }
-
-  try {
-
-    const { xml } = await bpmnModeler.saveXML({ format: true });
-
-    setEncoded(downloadLink, 'diagram.bpmn', xml);
-  } catch (err) {
-
-    console.error('Error happened saving diagram: ', err);
-
-    setEncoded(downloadLink, 'diagram.bpmn', null);
-  }
-}, 500);
-
-bpmnModeler.on('commandStack.changed', exportArtifacts);*/
-
-
-
-
-
 // part for dynamism of the  vertical divider 
 
 var dragTarget = undefined;
@@ -391,6 +357,7 @@ function dragend() {
 
 
 //modeler for space
+
 var mediator = new Mediator();
 window.mediator = mediator;
 

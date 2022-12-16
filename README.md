@@ -4,11 +4,6 @@ SpaceBPMN is a BPMN animator based on the bpmn.io web modeler which integrates a
 The result is a complete tool for animating BPMN models by taking into consideration also the space where actors can performs some kind of actions (movement actions). 
 The project embeds BPMN models into personal browsers without using any server backend. The graphical interface of SpaceBPMN presents to users a modeling environment where users can create BPMN models and space models. When the animation mode is activated, by clicking the corresponding button, one or more instances of the desired process can be fired.
 
-## Installation
-- [Elasticsearch 7.10](https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html)
-- [Kibana 7.10](https://codingfundas.com/how-to-install-elasticsearch-7-with-kibana-using-docker-compose/index.html)
-- [Confluent Platform 6.2](https://docs.confluent.io/platform/current/quickstart/ce-quickstart.html)
-
 ## Usage
 
 Install dependences
