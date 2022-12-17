@@ -36,21 +36,6 @@ var emptyDiagram =
 <olc:definitions xmlns:olc="http://bptlab/schema/olc" xmlns:olcDi="http://bptlab/schema/olcDi">
 </olc:definitions>`;
 
-var exampleDiagram =
-  `<?xml version="1.0" encoding="UTF-8"?>
-<olc:definitions xmlns:olc="http://bptlab/schema/olc" xmlns:olcDi="http://bptlab/schema/olcDi">
-  <olc:olc id="MainOlc" name="Olc Uno">
-    <olc:state name="Foo" id="State_0" type="olc:State" x="119" y="177" />
-    <olc:state name="Bar" id="State_1" type="olc:State" x="289" y="176" />
-    <olc:transition id="Transition_1" sourceState="State_0" targetState="State_1" type="olc:Transition" />
-  </olc:olc>
-  <olc:olc id="SecondOlc" name="Olc Dos">
-    <olc:state name="Boo" id="State_3" type="olc:State" x="119" y="177" />
-    <olc:state name="Klar" id="State_4" type="olc:State" x="289" y="176" />
-    <olc:transition id="Transition_2" sourceState="State_3" targetState="State_4" type="olc:Transition" />
-  </olc:olc>
-</olc:definitions>`;
-
 /**
  * Our editor constructor
  *
@@ -334,6 +319,23 @@ OlcModeler.prototype.createTransition = function (sourceState, targetState) {
 
   return transitionVisual.businessObject;
 }
+
+OlcModeler.prototype.renameOlcState = function (olcState) {
+  this.getReferencesInState(olcState.id).forEach((element) =>
+      this.get('eventBus').fire('element.updateLabel', {
+          element
+      })
+  );
+}
+
+OlcModeler.prototype.getReferencesInState = function (olcState) {
+    return this.get('elementRegistry').filter((element, gfx) =>
+        is(element, 'olc:State') &&
+        element.type !== 'label' &&
+        element.businessObject.states?.includes(olcState)
+    );
+}
+
 
 OlcModeler.prototype.saveXML = function (options) {
 

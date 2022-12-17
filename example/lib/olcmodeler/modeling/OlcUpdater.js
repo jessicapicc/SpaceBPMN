@@ -44,7 +44,7 @@ export default function OlcUpdater(eventBus, connectionDocking) {
         var context = event.context,
             element = context.shape || context.connection;
 
-        linkToBusinessObjectParent(element)
+       // linkToBusinessObjectParent(element)
     });
 
     this.executed([
@@ -54,7 +54,7 @@ export default function OlcUpdater(eventBus, connectionDocking) {
         var context = event.context,
             element = context.shape || context.connection;
 
-        removeFromBusinessObjectParent(element);
+        //removeFromBusinessObjectParent(element);
     });
 
     this.executed([
@@ -92,7 +92,7 @@ function reflectiveEdge(element) {
     ];
 }
 
-function linkToBusinessObjectParent(element) {
+/*function linkToBusinessObjectParent(element) {
     var parentShape = element.parent;
 
     var businessObject = element.businessObject,
@@ -100,15 +100,15 @@ function linkToBusinessObjectParent(element) {
 
     parentBusinessObject.get('Elements').push(businessObject);
     businessObject.$parent = parentBusinessObject;
-}
+}*/
 
-function removeFromBusinessObjectParent(element) {
+/*function removeFromBusinessObjectParent(element) {
     var businessObject = element.businessObject,
         parentBusinessObject = businessObject.$parent;
 
     collectionRemove(parentBusinessObject.get('Elements'), businessObject);
     businessObject.$parent = undefined;
-}
+}*/
 
 inherits(OlcUpdater, CommandInterceptor);
 
