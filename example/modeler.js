@@ -15,10 +15,6 @@ import {
 import spacePropertiesProviderModule from './lib/spacePropertiesPanel/spacePropertiesProvider/index.js';
 import spaceModdleDescriptor from './lib/spacePropertiesPanel/descriptors/space.json';
 
-import {
-  debounce
-} from 'min-dash';
-
 import fileDrop from 'file-drops';
 
 import fileOpen from 'file-open';
@@ -299,8 +295,9 @@ if (remoteDiagram) {
 
 toggleProperties(url.searchParams.has('pp'));
 
-// part for dynamism of the  vertical divider 
 
+
+// part for dynamism of the  vertical divider 
 var dragTarget = undefined;
 
 window.addEventListener('mousemove', function (e) { dragmove(e); });
@@ -355,9 +352,7 @@ function dragend() {
     dragTarget = undefined;
 }
 
-
 //modeler for space
-
 var mediator = new Mediator();
 window.mediator = mediator;
 

@@ -49,14 +49,6 @@ export default function Mediator() {
             event.cancelBubble = true;
         }
     });
-
-    this.on(CommonEvents.DATACLASS_CREATION_REQUESTED, event => {
-        return this.createDataclass(event.name);
-    });
-
- /*   this.on(CommonEvents.STATE_CREATION_REQUESTED, event => {
-        return this.createState(event.name, event.olc);
-    });*/
 }
 
 Mediator.prototype.getHooks = function () {
@@ -198,16 +190,6 @@ Mediator.prototype.OlcModelerHook = function (eventBus, olcModeler) {
 
     eventBus.on(OlcEvents.OLC_RENAME, event => {
         this.mediator.renamedClass(event.olc, event.name);
-    });
-
-   eventBus.on('import.parse.complete', ({context}) => {
-        context.warnings.filter(({message}) => message.startsWith('unresolved reference')).forEach(({property, value, element}) => {
-            if (property === 'olc:classRef') {
-                const dataClass = this.mediator.dataModelerHook.modeler.get('elementRegistry').get(value).businessObject;
-                if (!dataClass) { throw new Error('Could not resolve data class with id '+value); }
-                element.classRef = dataClass;
-            }
-        });
     });
 
     this.locationOfElement = function(element) {
