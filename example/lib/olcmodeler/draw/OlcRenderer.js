@@ -33,13 +33,11 @@ var DEFAULT_FILL_OPACITY = .95;
 var DEFAULT_TEXT_SIZE = 16;
 var LINE_HEIGHT_RATIO = 1.2;
 
-export default function OlcRenderer(eventBus, styles,
-  canvas, priority) {
+export default function OlcRenderer(eventBus, styles, canvas, priority) {
 
   BaseRenderer.call(this, eventBus, priority);
   var markers = {};
   var rendererId = RENDERER_IDS.next();
-  
 
   var computeStyle = styles.computeStyle;
 

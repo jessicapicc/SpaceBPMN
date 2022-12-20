@@ -80,8 +80,6 @@ OlcLabelEditing.prototype.update = function (element, newLabel) {
     });
 };
 
-
-
 OlcLabelEditing.$inject = [
     'eventBus',
     'canvas',
