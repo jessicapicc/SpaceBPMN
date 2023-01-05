@@ -44,7 +44,11 @@ module.exports = (env, argv) => {
         {
           test: /\.bpmn$/,
           type: 'asset/source'
-        }
+        },
+          {
+            test: /\.xml$/i,
+            use: 'raw-loader',
+          },
       ]
     },
     resolve: {

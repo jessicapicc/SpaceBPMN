@@ -49,6 +49,14 @@ export default function Mediator() {
             event.cancelBubble = true;
         }
     });
+
+    /*this.on(CommonEvents.DATACLASS_CREATION_REQUESTED, event => {
+        return this.createDataclass(event.name);
+    });*/
+
+    /*this.on(CommonEvents.STATE_CREATION_REQUESTED, event => {
+        return this.createState(event.name, event.olc);
+    });*/
 }
 
 Mediator.prototype.getHooks = function () {
@@ -97,37 +105,76 @@ function wrapCallback(callback, hook) {
     return (...args) => callback(...args, hook);
 }
 
+
 Mediator.prototype.addedClass = function (clazz) {
     this.olcModelerHook.modeler.addOlc(clazz);
 }
 
+/*Mediator.prototype.confirmClassDeletion = function (clazz) {
+    const affectedStates = this.olcModelerHook.modeler.getOlcByClass(clazz).get('Elements').filter(element => is(element, 'olc:State'));
+    const affectedDataObjectReferences = this.fragmentModelerHook.modeler.getDataObjectReferencesOfClass(clazz);
+    return confirm('Do you really want to delete class \"' + clazz.name + '\" ?'
+        + '\n' + affectedLiterals.length + ' literal(s), ' + affectedStates.length + ' olc state(s), and '
+        + affectedDataObjectReferences.length + ' data object reference(s) would be deleted as well.');
+}
+
 Mediator.prototype.deletedClass = function (clazz) {
+    this.fragmentModelerHook.modeler.handleClassDeleted(clazz);
     this.olcModelerHook.modeler.deleteOlc(clazz);
 }
 
 Mediator.prototype.renamedClass = function (clazz) {
     this.olcModelerHook.modeler.renameOlc(clazz.name, clazz);
+    this.fragmentModelerHook.modeler.handleClassRenamed(clazz);
+}*/
+
+Mediator.prototype.addState = function (olcState) {
+   // this.spaceModelerHook.modeler.createState(olcState);
+  // const olcs= this.OlcModelerHook.modeler.addOlc(); //Prendo OLCS
+    //Devo aggiungere lo stato all'interno di OLCS
+    //olcs.addOlc(olcState);
+   //this.olcModelerHook.modeler.addOlc(olcState);
 }
 
-Mediator.prototype.addedState = function (olcState) {
+Mediator.prototype.confirmStateDeletion = function (olcState) {
+    const affectedDataObjectReferences = this.spaceModelerHook.modeler.getDataObjectReferencesInState(olcState);
+    return confirm('Do you really want to delete state \"' + olcState.name + '\" ?');
 }
 
-Mediator.prototype.createState = function (name, olc) {
+Mediator.prototype.deletedState = function (olcState) {
+    this.spaceModelerHook.modeler.handleStateDeleted(olcState);
+}
+
+Mediator.prototype.renamedState = function (olcState) {
+    this.spaceModelerHook.modeler.handleStateRenamed(olcState);
+}
+
+Mediator.prototype.olcListChanged = function (olcs) {
+    this.spaceModelerHook.modeler.handleOlcListChanged(olcs);
+}
+
+/*Mediator.prototype.olcRenamed = function (olc, name) {
+    this.dataModelerHook.modeler.renameClass(olc.classRef, name);
+}*/
+
+/*Mediator.prototype.olcDeletionRequested = function (olc) {
+    const clazz = olc.classRef;
+    if (this.confirmClassDeletion(clazz)) {
+        this.dataModelerHook.modeler.deleteClass(clazz);
+    }
+}*/
+
+/*Mediator.prototype.createState = function (name, olc) {
     const state = this.olcModelerHook.modeler.createState(name, olc);
     this.olcModelerHook.focusElement(state);
     return state;
-}
+}*/
 
-
-Mediator.prototype.renamedState = function (olcState) {
-    this.olcModelerHook.modeler.renameOlcState(olcState);
-}
-
-Mediator.prototype.createDataclass = function (name) {
+/*Mediator.prototype.createDataclass = function (name) {
     const clazz = this.dataModelerHook.modeler.createDataclass(name);
     this.dataModelerHook.focusElement(clazz);
     return clazz;
-}
+}*/
 
 Mediator.prototype.focusElement = function(element) {
     const hook = this.getHookForElement(element);
@@ -150,7 +197,7 @@ Mediator.prototype.getHookForElement = function(element) {
 // === Olc Modeler Hook
 Mediator.prototype.OlcModelerHook = function (eventBus, olcModeler) {
     CommandInterceptor.call(this, eventBus);
-    AbstractHook.call(this, olcModeler, 'OLCs');
+    AbstractHook.call(this, olcModeler, 'OLCs', 'https://github.com/bptlab/fCM-design-support/wiki/Object-Lifecycle-(OLC)');
     this.mediator.olcModelerHook = this;
     this.eventBus = eventBus;
 
@@ -158,17 +205,29 @@ Mediator.prototype.OlcModelerHook = function (eventBus, olcModeler) {
         'shape.create'
     ], event => {
         if (is(event.context.shape, 'olc:State')) {
-            this.mediator.addedState(event.context.shape.businessObject);
+            this.mediator.addState(event.context.shape.businessObject);
+        }
+        
+    });
+
+    this.executed([
+        'shape.delete'
+    ], event => {
+        if (is(event.context.shape, 'olc:State')) {
+            this.mediator.deletedState(event.context.shape.businessObject);
         }
     });
-    this.executed([
-        'shape.delete',
+
+    this.preExecute([
         'elements.delete'
     ], event => {
-        if (is(event.context.shape && event.context.elements, 'olc:State')) {
-            this.mediator.deletedClass(event.context.shape.businessObject);
-            this.mediator.deletedClass(event.context.element.businessObject);
-        }
+        event.context.elements = event.context.elements.filter(element => {
+            if (is(element, 'olc:State')) {
+                return this.mediator.confirmStateDeletion(element.businessObject);
+            } else {
+                return true;
+            }
+        });
     });
 
     this.executed([
@@ -177,8 +236,7 @@ Mediator.prototype.OlcModelerHook = function (eventBus, olcModeler) {
         if (is(event.context.element, 'olc:State')) {
             this.mediator.renamedState(event.context.element.businessObject);
         }
-    }
-    );
+    });
 
     this.reverted([
         'element.updateLabel'
@@ -188,9 +246,24 @@ Mediator.prototype.OlcModelerHook = function (eventBus, olcModeler) {
         }
     });
 
-    eventBus.on(OlcEvents.OLC_RENAME, event => {
-        this.mediator.renamedClass(event.olc, event.name);
+    eventBus.on(OlcEvents.DEFINITIONS_CHANGED, event => {
+        this.mediator.olcListChanged(event.definitions.olcs);
     });
+
+    /*eventBus.on(OlcEvents.OLC_RENAME, event => {
+        this.mediator.olcRenamed(event.olc, event.name);
+    });*/
+
+    /*eventBus.on('import.parse.complete', ({context}) => {
+        context.warnings.filter(({message}) => message.startsWith('unresolved reference')).forEach(({property, value, element}) => {
+            if (property === 'olc:classRef') {
+                console.log(this.mediator.fragmentModelerHook.modeler.get('elementRegistry'));
+                const dataClass = this.mediator.fragmentModelerHook.modeler.get('elementRegistry').get(value).businessObject;
+                if (!dataClass) { throw new Error('Could not resolve data class with id '+value); }
+                element.classRef = dataClass;
+            }
+        });
+    });*/
 
     this.locationOfElement = function(element) {
         return 'Olc ' + root(element).name;
@@ -204,3 +277,30 @@ Mediator.prototype.OlcModelerHook.$inject = [
 ];
 
 Mediator.prototype.OlcModelerHook.isHook = true;
+
+
+// === Fragment Modeler Hook
+Mediator.prototype.SpaceModelerHook = function (eventBus, spaceModeler) {
+    CommandInterceptor.call(this, eventBus);
+    AbstractHook.call(this, spaceModeler, 'Space', 'https://github.com/bptlab/fCM-design-support/wiki/Fragments');
+    this.mediator.spaceModelerHook = this;
+    this.eventBus = eventBus;
+
+    eventBus.on('import.parse.complete', ({warnings}) => {
+        warnings.filter(({message}) => message.startsWith('unresolved reference')).forEach(({property, value, element}) => {
+            if (property === 'fcm:states') {
+                const state = this.mediator.olcModelerHook.modeler.getStateById(value)
+                if (!state) { throw new Error('Could not resolve olc state with id '+value); }
+                element.get('states').push(state);
+            }
+        });
+    });
+}
+inherits(Mediator.prototype.SpaceModelerHook, CommandInterceptor);
+
+Mediator.prototype.SpaceModelerHook.$inject = [
+    'eventBus',
+    'spaceModeler'
+];
+
+Mediator.prototype.SpaceModelerHook.isHook = true;

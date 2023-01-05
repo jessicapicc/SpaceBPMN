@@ -21,7 +21,8 @@
         {
           "name": "destination",
           "isAttr": true,
-          "type": "String"
+          "isReference": true,
+          "type": "olc:State"
         },
         {
           "name": "velocity",

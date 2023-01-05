@@ -1,4 +1,4 @@
-import { TextFieldEntry, NumberFieldEntry, isTextFieldEntryEdited, isNumberFieldEntryEdited } from '@bpmn-io/properties-panel';
+import { TextFieldEntry, NumberFieldEntry, isTextFieldEntryEdited, isNumberFieldEntryEdited, SelectEntry, isSelectEntryEdited } from '@bpmn-io/properties-panel';
 import { useService } from 'bpmn-js-properties-panel';
 
 export default function(element) {
@@ -14,7 +14,7 @@ export default function(element) {
     id: 'destination',
     element,
     component: Destination,
-    isEdited: isTextFieldEntryEdited
+    isEdited: isSelectEntryEdited
     },
     { 
       id: 'velocity',
@@ -62,27 +62,74 @@ function Guard(props) {
 
   function Destination(props) {
     const { element, id } = props;
-  
+
     const modeling = useService('modeling');
     const translate = useService('translate');
     const debounce = useService('debounceInput');
   
+
+    
+
+
+
+
     const getValue = () => {
       return element.businessObject.destination || '';
     }
   
-    const setValue = value => {
+    const getOptions = () =>  createOptions(); 
+
+    function createOptions(overrides = {}) {
+      const {
+        options = []
+      } = overrides;
+
+    //definisci un array con le destinazioni che all'inizio è vuoto
+    //ad ogni nuovo olc:state aggiungiamo l'opzione dinamicamente
+    // cerca di capire appendchild
+    //cerca di capire come gestisce le classi e lo stato di olc modeler. 
+     //fire o dispatch cerca. 
+   /* function getDestination (){
+      this.get('elementRegistry').filter((element) => 
+      is(element, 'bpmn:Task') &&
+      element.type !== 'label' &&
+      clazz.id &&
+      element.businessObject.dataclass?.id === clazz.id)}*/
+
+      const newOptions = [
+        {
+          label: 'null',
+          value: null
+        },
+        {
+          value: 'A'
+        },
+        {
+          label: 'option B',
+          value: 'B',
+        },
+        {
+          label: 'option C',
+          value: 'C',
+        },
+        ...options
+      ];
+    
+      return newOptions;
+    }
+
+   /* const setValue = value => {
       return modeling.updateProperties(element, {
         destination: value
       });
-    }
-    return <TextFieldEntry
+    }*/
+
+    return <SelectEntry
     id={ id }
     element={ element }
-    description={ translate('') }
     label={ translate('Destination') }
     getValue={ getValue }
-    setValue={ setValue }
+    getOptions= {getOptions}
     debounce={ debounce }
   />
 }

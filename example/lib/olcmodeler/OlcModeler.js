@@ -1,5 +1,5 @@
 import inherits from 'inherits';
-import { groupBy, without, findIndex } from 'min-dash'
+import { groupBy, without } from 'min-dash'
 
 import Diagram from 'diagram-js';
 
@@ -13,7 +13,6 @@ import MoveCanvasModule from 'diagram-js/lib/navigation/movecanvas';
 import MoveModule from 'diagram-js/lib/features/move';
 import OutlineModule from 'diagram-js/lib/features/outline';
 import PaletteModule from 'diagram-js/lib/features/palette';
-// import ResizeModule from 'diagram-js/lib/features/resize';
 import RulesModule from 'diagram-js/lib/features/rules';
 import SelectionModule from 'diagram-js/lib/features/selection';
 import ZoomScrollModule from 'diagram-js/lib/navigation/zoomscroll';
@@ -30,11 +29,14 @@ import OlcAutoPlaceModule from './auto-place';
 import OlcModdle from './moddle';
 import OlcEvents from './OlcEvents';
 import { nextPosition, root, is } from '../util/Util';
+import OlcButtonBarModule from './buttonbar';
 
 var emptyDiagram =
   `<?xml version="1.0" encoding="UTF-8"?>
-<olc:definitions xmlns:olc="http://bptlab/schema/olc" xmlns:olcDi="http://bptlab/schema/olcDi">
+<olc:definitions xmlns:olc="http://bptlab/schema/olc">
 </olc:definitions>`;
+
+
 
 /**
  * Our editor constructor
@@ -77,11 +79,13 @@ export default function OlcModeler(options) {
     OlcDrawModule,
     OlcRulesModule,
     OlcModelingModule,
+    OlcButtonBarModule,
     OlcAutoPlaceModule,
     {
       moddle: ['value', new OlcModdle({})],
       olcModeler: ['value', this]
     }
+
   ];
 
   const diagramOptions = {
@@ -100,26 +104,14 @@ export default function OlcModeler(options) {
   
   this.get('eventBus').fire('attach'); // Needed for key listeners to work
 
-  // Hide canvas when no olc is available
-  this.get('eventBus').on(OlcEvents.DEFINITIONS_CHANGED, event => {
-    const container = this.get('canvas').getContainer();
-    const shouldBeVisible = event.definitions.get('olcs').length !== 0;
-    const currentVisibility = container.style.visibility;
-    if (!currentVisibility || (shouldBeVisible !== (currentVisibility !== 'hidden'))) {
-      if (shouldBeVisible) {
-        container.style.visibility = '';
-      } else {
-        container.style.visibility = 'hidden';
-      }
-    }
-  });
 }
-
 inherits(OlcModeler, Diagram);
+
 
 OlcModeler.prototype.createNew = function () {
   return this.importXML(emptyDiagram);
 }
+
 
 OlcModeler.prototype.importXML = function (xml) {
 
@@ -132,7 +124,7 @@ OlcModeler.prototype.importXML = function (xml) {
     xml = self._emit('import.parse.start', { xml: xml }) || xml;
 
     self.get('moddle').fromXML(xml).then(function (result) {
-
+      console.log(result.rootElement)
       var definitions = result.rootElement;
       var references = result.references;
       var parseWarnings = result.warnings;
@@ -173,16 +165,17 @@ OlcModeler.prototype.importXML = function (xml) {
 
 //TODO handle errors during import
 OlcModeler.prototype.importDefinitions = function (definitions) {
-  this.get('elementFactory')._ids.clear();
+  var self =this;
+  self.get('elementFactory')._ids.clear();
   this._definitions = definitions;
-  this._emit(OlcEvents.DEFINITIONS_CHANGED, { definitions: definitions });
-  this._emit('import.render.start', { definitions: definitions });
-  this.showOlc(definitions.olcs[0]);
-  this._emit('import.render.complete', {});
+  self._emit(OlcEvents.DEFINITIONS_CHANGED, { definitions: definitions });
+  self._emit('import.render.start', { definitions: definitions });
+  console.log(definitions.olcs[0])
+  self.showOlc(definitions.olcs[0]);
+  self._emit('import.render.complete', {});
 }
 
 OlcModeler.prototype.showOlc = function (olc) {
-  this.clear();
   this._olc = olc;
   if (olc) {
     const elementFactory = this.get('elementFactory');
@@ -221,6 +214,14 @@ OlcModeler.prototype.showOlc = function (olc) {
   this._emit(OlcEvents.SELECTED_OLC_CHANGED, { olc: olc });
 }
 
+OlcModeler.prototype.getDefinitions = function() {
+  return this._definitions;
+};
+
+OlcModeler.prototype.on = function(event, priority, callback, target) {
+  return this.get('eventBus').on(event, priority, callback, target);
+};
+
 OlcModeler.prototype.showOlcById = function (id) {
   if (id && this._definitions && id !== (this._olc && this._olc.get('id'))) {
     var olc = this._definitions.get('olcs').filter(olc => olc.get('id') === id)[0];
@@ -233,18 +234,16 @@ OlcModeler.prototype.showOlcById = function (id) {
 }
 
 OlcModeler.prototype.addOlc = function (clazz) {
-  var olc = this.get('elementFactory').createBusinessObject('olc:Olc', { name: clazz.name || '<TBD>', classRef: clazz });
+  var olc = this.get('elementFactory').createBusinessObject('olc:Olc', {name:clazz.name});
+  console.log(this._definitions.get('olcs'));
   this._definitions.get('olcs').push(olc);
   this._emit(OlcEvents.DEFINITIONS_CHANGED, { definitions: this._definitions });
   this.showOlc(olc);
 }
 
+
 OlcModeler.prototype.getCurrentOlc = function () {
   return this._olc;
-}
-
-OlcModeler.prototype.deleteCurrentOlc = function () {
-  this.deleteOlc(this._olc.classRef);
 }
 
 OlcModeler.prototype.deleteOlc = function (clazz) {
@@ -270,24 +269,17 @@ OlcModeler.prototype.getOlcById = function(id) {
   return this.getOlcs().filter(olc => olc.id === id)[0];
 }
 
-OlcModeler.prototype.getOlcByClass = function(clazz) {
-  const olc = this.getOlcs().filter(olc => olc.classRef === clazz)[0];
-  if (!olc) {
-    throw 'Unknown olc of class \"'+clazz.name+'\"';
-  } else {
-    return olc;
-  }
-}
-
 OlcModeler.prototype.getStateById = function(id) {
   return this.getOlcs().flatMap(olc => olc.get('Elements')).filter(element => is(element, 'olc:State')).filter(state => state.id === id)[0];
 }
 
+
 OlcModeler.prototype.getOlcs = function() {
   return this._definitions.get('olcs');
+  console.log(this._definitions.get('olcs'));
 }
 
-OlcModeler.prototype.createState = function (name, olc) {
+/*OlcModeler.prototype.createState = function (name, olc) {
   this.showOlcById(olc.id);
 
   const modeling = this.get('modeling');
@@ -302,7 +294,8 @@ OlcModeler.prototype.createState = function (name, olc) {
     y: parseInt(y)
   }, { x, y }, diagramRoot);
   return shape.businessObject;
-}
+}*/
+
 
 OlcModeler.prototype.createTransition = function (sourceState, targetState) {
   this.showOlcById(root(sourceState).id);
@@ -320,6 +313,16 @@ OlcModeler.prototype.createTransition = function (sourceState, targetState) {
   return transitionVisual.businessObject;
 }
 
+
+OlcModeler.prototype.getReferencesInState = function (olcState) {
+  return this.get('elementRegistry').filter((element) =>
+      is(element, 'olc:State') &&
+      element.type !== 'label' &&
+      element.businessObject.states?.includes(olcState)
+  );
+}
+
+//change label
 OlcModeler.prototype.renameOlcState = function (olcState) {
   this.getReferencesInState(olcState.id).forEach((element) =>
       this.get('eventBus').fire('element.updateLabel', {
@@ -328,14 +331,21 @@ OlcModeler.prototype.renameOlcState = function (olcState) {
   );
 }
 
-OlcModeler.prototype.getReferencesInState = function (olcState) {
-    return this.get('elementRegistry').filter((element, gfx) =>
-        is(element, 'olc:State') &&
-        element.type !== 'label' &&
-        element.businessObject.states?.includes(olcState)
-    );
+
+//delete olc
+OlcModeler.prototype.deleteOlcState = function (olcState) {
+  this.getReferencesInState(olcState).forEach((element, gfx) => {
+      element.businessObject.states = without(element.businessObject.states, olcState);
+      this.get('eventBus').fire('element.delete', {
+          element
+      });
+  });
 }
 
+OlcModeler.prototype.handleOlcListChanged = function (olcs) {
+  this._olcs = olcs;
+  console.log(this._olcs)
+}
 
 OlcModeler.prototype.saveXML = function (options) {
 
@@ -344,13 +354,14 @@ OlcModeler.prototype.saveXML = function (options) {
   var self = this;
 
   var definitions = this._definitions;
+  console.log(definitions);
 
   return new Promise(function (resolve, reject) {
-
+    
     if (!definitions) {
       var err = new Error('no xml loaded');
 
-      return reject(err);
+      return reject(err + definitions);
     }
 
     // allow to fiddle around with definitions

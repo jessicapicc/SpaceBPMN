@@ -4,7 +4,7 @@
 import $ from 'jquery';
 import TokenSimulationModule from '..';
 
-import BpmnModeler from 'bpmn-js/lib/Modeler';
+//import BpmnModeler from 'bpmn-js/lib/Modeler';
 
 import AddExporter from '@bpmn-io/add-exporter';
 import {
@@ -12,19 +12,22 @@ import {
   BpmnPropertiesProviderModule
 } from 'bpmn-js-properties-panel';
 
-import spacePropertiesProviderModule from './lib/spacePropertiesPanel/spacePropertiesProvider/index.js';
-import spaceModdleDescriptor from './lib/spacePropertiesPanel/descriptors/space.json';
+//import spacePropertiesProviderModule from './lib/spacePropertiesPanel/spacePropertiesProvider/index.js';
+//import spaceModdleDescriptor from './lib/spacePropertiesPanel/descriptors/space.json';
 
 import fileDrop from 'file-drops';
 
 import fileOpen from 'file-open';
 
 import download from 'downloadjs';
+import Zip from 'jszip';
 
-import exampleXML from '../example/resources/example.bpmn';
+import exampleXML from '../example/resources/prova.bpmn';
 
 import OlcModeler from './lib/olcmodeler/OlcModeler';
 import Mediator from './lib/mediator/Mediator';
+import BpmnSpaceModeler from './lib/bpmnmodeler/bpmnSpaceModeler';
+import { downloadZIP, uploadZIP } from './lib/util/FileUtil';
 
 const url = new URL(window.location.href);
 const persistent = url.searchParams.has('p');
@@ -95,7 +98,12 @@ const ExampleModule = {
   ]
 };
 
-const modeler = new BpmnModeler({
+var mediator = new Mediator();
+window.mediator = mediator;
+
+
+//modeler for bpmn
+/*const modeler = new BpmnModeler({
   container: '#canvas',
   additionalModules: [
     BpmnPropertiesPanelModule,
@@ -103,7 +111,7 @@ const modeler = new BpmnModeler({
     spacePropertiesProviderModule,
     TokenSimulationModule,
     AddExporter,
-    ExampleModule
+    ExampleModule,
   ],
   propertiesPanel: {
     parent: '#properties-panel'
@@ -118,7 +126,58 @@ const modeler = new BpmnModeler({
   moddleExtensions: {
     space: spaceModdleDescriptor
   }
+});*/
+
+
+//modeler for space
+
+var olcModeler = new OlcModeler({
+    container: document.querySelector('#olc-canvas'),
+    keyboard: { 
+      bindTo: document.querySelector('#olc-canvas') 
+    },
+    additionalModules: [{
+      __init__ : ['mediator'],
+      mediator : ['type', mediator.OlcModelerHook]
+    },
+  ]
 });
+
+//create a bpmn modeler
+var modeler = new BpmnSpaceModeler({
+  container:'#canvas',
+  keyboard: { 
+    bindTo: document 
+  },
+  exporter: {
+    name: 'bpmn-js-token-simulation',
+    version: process.env.TOKEN_SIMULATION_VERSION
+  },
+  additionalModules: [{
+    __init__ : ['mediator'],
+    mediator : ['type', mediator.SpaceModelerHook]
+  },
+  BpmnPropertiesPanelModule,
+  BpmnPropertiesProviderModule,
+  TokenSimulationModule,
+  AddExporter,
+  ExampleModule
+],
+  propertiesPanel: {
+    parent: '#properties-panel'
+  }
+});
+
+
+async function createNewDiagram() {
+    await modeler.importXML(exampleXML);
+    await olcModeler.createNew();
+}
+
+$(function() {
+  createNewDiagram();
+});
+
 
 function openDiagram(diagram) {
   return modeler.importXML(diagram)
@@ -191,7 +250,29 @@ function loadDiagram(xml) {
     document.body.removeChild(fileInput);
   }
 
-document.querySelector("#open-diagram").addEventListener('click', (e) =>loadDiagram(e.currentTarget.file));
+  async function importFromZip (zipData) {
+    const zip = await Zip.loadAsync(zipData, {base64 : true});
+    const files = {
+      space: zip.file('space.bpmn'),
+      olcs: zip.file('olcs.xml'),
+    };
+    Object.keys(files).forEach(key => {
+      if (!files[key]) {
+        throw new Error('Missing file: '+key)
+      }
+    });
+    await olcModeler.importXML(await files.olcs.async("string"));
+    await modeler.importXML(await files.space.async("string"));
+  }
+
+document.querySelector("#open-diagram").addEventListener('click', () => uploadZIP(data => {
+    if (data.startsWith('data:')) {
+      data = data.split(',')[1];
+    }
+    importFromZip(data);
+  }, 'base64'));
+
+//document.querySelector("#open-diagram").addEventListener('click', (e) =>loadDiagram(e.currentTarget.file));
 
 //download diagram
 function downloadDiagram() {
@@ -216,9 +297,21 @@ document.body.addEventListener('keydown', function(event) {
   }
 });
 
-document.querySelector('#download-button').addEventListener('click', function(event) {
-  downloadDiagram();
-});
+async function exportToZip () {
+  const zip = new Zip();
+  const space = (await modeler.saveXML({format:true})).xml;
+  zip.file('space.bpmn', space);
+  const olcs = (await olcModeler.saveXML({ format: true })).xml;
+  zip.file('olcs.xml', olcs);
+  return zip.generateAsync({type : 'base64'}); 
+}
+
+
+document.querySelector('#download-button').addEventListener('click',  () => exportToZip().then(zip => {
+  downloadZIP('SpaceBPMN.zip', zip, 'base64');
+  //importFromZip(zip);
+}));
+
 
 const propertiesPanel = document.querySelector('#properties-panel');
 
@@ -271,6 +364,7 @@ propertiesPanelResizer.addEventListener('drag', function(event) {
 
 const remoteDiagram = url.searchParams.get('diagram');
 
+//Apre il diagramma iniziale
 if (remoteDiagram) {
   fetch(remoteDiagram).then(
     r => {
@@ -352,17 +446,3 @@ function dragend() {
     dragTarget = undefined;
 }
 
-//modeler for space
-var mediator = new Mediator();
-window.mediator = mediator;
-
-var olcModeler = new OlcModeler({
-    container: document.querySelector('#olc-canvas'),
-    keyboard: { 
-      bindTo: document.querySelector('#olc-canvas') 
-    },
-    additionalModules: [{
-      __init__ : ['mediator'],
-      mediator : ['type', mediator.OlcModelerHook]
-    }]
-});

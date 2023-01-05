@@ -96,12 +96,12 @@ PaletteProvider.prototype.getPaletteEntries = function (element) {
     },
     'create-object': createAction(
       'olc:State', 'olc-elements', 'bpmn-icon-start-event-none',
-      translate('Create state')
+      translate('Create place')
     ),
     'object-linker': {
       group: 'olc-elements',
       className: 'bpmn-icon-connection',
-      title: translate('Create transition'),
+      title: translate('Create connection'),
       action: {
         click: function (event) {
           globalConnect.start(event);

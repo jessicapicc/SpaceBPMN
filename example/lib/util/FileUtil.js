@@ -1,6 +1,6 @@
 import $ from 'jquery';
 
-export function download(name, data, encoding='charset=UTF-8') {
+export function downloadZIP(name, data, encoding='charset=UTF-8') {
     var encodedData = encodeURIComponent(data);
     var link = document.createElement("a");
     document.body.appendChild(link);
@@ -16,7 +16,7 @@ export function download(name, data, encoding='charset=UTF-8') {
     document.body.removeChild(link);
 }
 
-export function upload(callback, encoding='UTF-8') {
+export function uploadZIP(callback, encoding='UTF-8') {
     var fileInput = document.createElement("input");
     document.body.appendChild(fileInput);
 
