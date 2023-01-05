@@ -41,49 +41,6 @@ BpmnSpaceModeler.prototype.handleOlcListChanged = function (olcs, dryRun=false) 
     this._olcs = olcs;
 }
 
-
-/*BpmnSpaceModeler.prototype.createState = function (olcState){
-this.get(('elementFactory').createBusinessObject('olc:Olc', { name: clazz.name || '<TBD>'}))
-}
-
-OlcModeler.prototype.addOlc = function (clazz) {
-    var olc = this.get('elementFactory').createBusinessObject('olc:Olc', { name: clazz.name || '<TBD>'});
-    this._definitions.get('olcs').push(olc);
-    this._emit(OlcEvents.DEFINITIONS_CHANGED, { definitions: this._definitions });
-    this.showOlc(olc);
-  }*/
-
-BpmnSpaceModeler.prototype.handleStateRenamed = function (olcState) {
-    this.getDataObjectReferencesInState(olcState).forEach((element, gfx) =>
-        this.get('eventBus').fire('element.changed', {
-            element
-        })
-    );
-}
-
-BpmnSpaceModeler.prototype.handleStateDeleted = function (olcState) {
-    this.getDataObjectReferencesInState(olcState).forEach((element, gfx) => {
-        element.businessObject.destination = without(element.businessObject.destination, olcState);
-        this.get('eventBus').fire('element.changed', {
-            element
-        });
-    });
-}
-
-/*FragmentModeler.prototype.handleClassRenamed = function (clazz) {
-    this.getDataObjectReferencesOfClass(clazz).forEach((element, gfx) =>
-        this.get('eventBus').fire('element.changed', {
-            element
-        })
-    );
-}
-
-FragmentModeler.prototype.handleClassDeleted = function (clazz) {
-    this.getDataObjectReferencesOfClass(clazz).forEach((element, gfx) =>
-        this.get('modeling').removeElements([element])
-    );
-}*/
-
 BpmnSpaceModeler.prototype.getDataObjectReferencesInState = function (olcState) {
     return this.get('elementRegistry').filter((element, gfx) =>
         is(element, 'bpmn:Task') &&
@@ -91,15 +48,6 @@ BpmnSpaceModeler.prototype.getDataObjectReferencesInState = function (olcState) 
         element.businessObject.destination
     );
 }
-
-/*FragmentModeler.prototype.getDataObjectReferencesOfClass = function (clazz) {
-    return this.get('elementRegistry').filter((element, gfx) => 
-        is(element, 'bpmn:DataObjectReference') &&
-        element.type !== 'label' &&
-        clazz.id &&
-        element.businessObject.dataclass?.id === clazz.id
-    );
-}*/
 
 BpmnSpaceModeler.prototype.startDoCreation = function(event, elementShape, dataclass, isIncoming) {
     const shape = this.get('elementFactory').createShape({

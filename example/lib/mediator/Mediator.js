@@ -49,14 +49,6 @@ export default function Mediator() {
             event.cancelBubble = true;
         }
     });
-
-    /*this.on(CommonEvents.DATACLASS_CREATION_REQUESTED, event => {
-        return this.createDataclass(event.name);
-    });*/
-
-    /*this.on(CommonEvents.STATE_CREATION_REQUESTED, event => {
-        return this.createState(event.name, event.olc);
-    });*/
 }
 
 Mediator.prototype.getHooks = function () {
@@ -110,30 +102,7 @@ Mediator.prototype.addedClass = function (clazz) {
     this.olcModelerHook.modeler.addOlc(clazz);
 }
 
-/*Mediator.prototype.confirmClassDeletion = function (clazz) {
-    const affectedStates = this.olcModelerHook.modeler.getOlcByClass(clazz).get('Elements').filter(element => is(element, 'olc:State'));
-    const affectedDataObjectReferences = this.fragmentModelerHook.modeler.getDataObjectReferencesOfClass(clazz);
-    return confirm('Do you really want to delete class \"' + clazz.name + '\" ?'
-        + '\n' + affectedLiterals.length + ' literal(s), ' + affectedStates.length + ' olc state(s), and '
-        + affectedDataObjectReferences.length + ' data object reference(s) would be deleted as well.');
-}
-
-Mediator.prototype.deletedClass = function (clazz) {
-    this.fragmentModelerHook.modeler.handleClassDeleted(clazz);
-    this.olcModelerHook.modeler.deleteOlc(clazz);
-}
-
-Mediator.prototype.renamedClass = function (clazz) {
-    this.olcModelerHook.modeler.renameOlc(clazz.name, clazz);
-    this.fragmentModelerHook.modeler.handleClassRenamed(clazz);
-}*/
-
 Mediator.prototype.addState = function (olcState) {
-   // this.spaceModelerHook.modeler.createState(olcState);
-  // const olcs= this.OlcModelerHook.modeler.addOlc(); //Prendo OLCS
-    //Devo aggiungere lo stato all'interno di OLCS
-    //olcs.addOlc(olcState);
-   //this.olcModelerHook.modeler.addOlc(olcState);
 }
 
 Mediator.prototype.confirmStateDeletion = function (olcState) {
@@ -142,39 +111,16 @@ Mediator.prototype.confirmStateDeletion = function (olcState) {
 }
 
 Mediator.prototype.deletedState = function (olcState) {
-    this.spaceModelerHook.modeler.handleStateDeleted(olcState);
+    this.olcModelerHook.modeler.deleteOlcState(olcState);
 }
 
 Mediator.prototype.renamedState = function (olcState) {
-    this.spaceModelerHook.modeler.handleStateRenamed(olcState);
+    this.olcModelerHook.modeler.renameOlcState(olcState);
 }
 
 Mediator.prototype.olcListChanged = function (olcs) {
-    this.spaceModelerHook.modeler.handleOlcListChanged(olcs);
+    this.olcModelerHook.modeler.handleOlcListChanged(olcs);
 }
-
-/*Mediator.prototype.olcRenamed = function (olc, name) {
-    this.dataModelerHook.modeler.renameClass(olc.classRef, name);
-}*/
-
-/*Mediator.prototype.olcDeletionRequested = function (olc) {
-    const clazz = olc.classRef;
-    if (this.confirmClassDeletion(clazz)) {
-        this.dataModelerHook.modeler.deleteClass(clazz);
-    }
-}*/
-
-/*Mediator.prototype.createState = function (name, olc) {
-    const state = this.olcModelerHook.modeler.createState(name, olc);
-    this.olcModelerHook.focusElement(state);
-    return state;
-}*/
-
-/*Mediator.prototype.createDataclass = function (name) {
-    const clazz = this.dataModelerHook.modeler.createDataclass(name);
-    this.dataModelerHook.focusElement(clazz);
-    return clazz;
-}*/
 
 Mediator.prototype.focusElement = function(element) {
     const hook = this.getHookForElement(element);
@@ -254,17 +200,6 @@ Mediator.prototype.OlcModelerHook = function (eventBus, olcModeler) {
         this.mediator.olcRenamed(event.olc, event.name);
     });*/
 
-    /*eventBus.on('import.parse.complete', ({context}) => {
-        context.warnings.filter(({message}) => message.startsWith('unresolved reference')).forEach(({property, value, element}) => {
-            if (property === 'olc:classRef') {
-                console.log(this.mediator.fragmentModelerHook.modeler.get('elementRegistry'));
-                const dataClass = this.mediator.fragmentModelerHook.modeler.get('elementRegistry').get(value).businessObject;
-                if (!dataClass) { throw new Error('Could not resolve data class with id '+value); }
-                element.classRef = dataClass;
-            }
-        });
-    });*/
-
     this.locationOfElement = function(element) {
         return 'Olc ' + root(element).name;
     }
@@ -288,10 +223,10 @@ Mediator.prototype.SpaceModelerHook = function (eventBus, spaceModeler) {
 
     eventBus.on('import.parse.complete', ({warnings}) => {
         warnings.filter(({message}) => message.startsWith('unresolved reference')).forEach(({property, value, element}) => {
-            if (property === 'fcm:states') {
+            if (property === 'space:destination') {
                 const state = this.mediator.olcModelerHook.modeler.getStateById(value)
                 if (!state) { throw new Error('Could not resolve olc state with id '+value); }
-                element.get('states').push(state);
+                element.get('destination').push(state);
             }
         });
     });

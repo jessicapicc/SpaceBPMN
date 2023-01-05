@@ -88,8 +88,7 @@
         },
         {
           "name": "olcs",
-          "type": "Olc",
-          "isMany": true
+          "type": "Olc"
         },
         {
           "name": "exporter",

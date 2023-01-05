@@ -29,14 +29,13 @@ import OlcAutoPlaceModule from './auto-place';
 import OlcModdle from './moddle';
 import OlcEvents from './OlcEvents';
 import { nextPosition, root, is } from '../util/Util';
-import OlcButtonBarModule from './buttonbar';
 
 var emptyDiagram =
   `<?xml version="1.0" encoding="UTF-8"?>
-<olc:definitions xmlns:olc="http://bptlab/schema/olc">
+<olc:definitions xmlns:olc="http://bptlab/schema/olc" >
+<olc:olc name="SpaceDiagram" id="Space_Diagram">
+</olc:olc>
 </olc:definitions>`;
-
-
 
 /**
  * Our editor constructor
@@ -79,7 +78,6 @@ export default function OlcModeler(options) {
     OlcDrawModule,
     OlcRulesModule,
     OlcModelingModule,
-    OlcButtonBarModule,
     OlcAutoPlaceModule,
     {
       moddle: ['value', new OlcModdle({})],
@@ -122,6 +120,7 @@ OlcModeler.prototype.importXML = function (xml) {
     // hook in pre-parse listeners +
     // allow xml manipulation
     xml = self._emit('import.parse.start', { xml: xml }) || xml;
+    console.log(xml);
 
     self.get('moddle').fromXML(xml).then(function (result) {
       console.log(result.rootElement)
@@ -146,6 +145,7 @@ OlcModeler.prototype.importXML = function (xml) {
         definitions: definitions,
         context: context
       }) || definitions;
+      console.log(definitions);
       self.importDefinitions(definitions);
       self._emit('import.done', { error: null, warnings: null });
       resolve();
@@ -165,17 +165,19 @@ OlcModeler.prototype.importXML = function (xml) {
 
 //TODO handle errors during import
 OlcModeler.prototype.importDefinitions = function (definitions) {
-  var self =this;
+  var self = this;
   self.get('elementFactory')._ids.clear();
   this._definitions = definitions;
+  console.log(this._definitions);
   self._emit(OlcEvents.DEFINITIONS_CHANGED, { definitions: definitions });
   self._emit('import.render.start', { definitions: definitions });
-  console.log(definitions.olcs[0])
-  self.showOlc(definitions.olcs[0]);
+  console.log(definitions.olcs)
+  self.showOlc(definitions.olcs);
   self._emit('import.render.complete', {});
 }
 
 OlcModeler.prototype.showOlc = function (olc) {
+  this.clear();
   this._olc = olc;
   if (olc) {
     const elementFactory = this.get('elementFactory');
@@ -233,36 +235,8 @@ OlcModeler.prototype.showOlcById = function (id) {
   }
 }
 
-OlcModeler.prototype.addOlc = function (clazz) {
-  var olc = this.get('elementFactory').createBusinessObject('olc:Olc', {name:clazz.name});
-  console.log(this._definitions.get('olcs'));
-  this._definitions.get('olcs').push(olc);
-  this._emit(OlcEvents.DEFINITIONS_CHANGED, { definitions: this._definitions });
-  this.showOlc(olc);
-}
-
-
 OlcModeler.prototype.getCurrentOlc = function () {
   return this._olc;
-}
-
-OlcModeler.prototype.deleteOlc = function (clazz) {
-  var olc = this.getOlcByClass(clazz);
-  var currentIndex = findIndex(this._definitions.olcs, olc);
-  var indexAfterRemoval = Math.min(currentIndex, this._definitions.olcs.length - 2);
-
-  this._definitions.olcs = without(this._definitions.olcs, olc);
-  this._emit(OlcEvents.DEFINITIONS_CHANGED, { definitions: this._definitions });
-
-  if (olc === this._olc) {
-    this.showOlc(this._definitions.olcs[indexAfterRemoval]);
-  }
-}
-
-OlcModeler.prototype.renameOlc = function (name, clazz) {
-  const olc = this.getOlcByClass(clazz);
-  olc.name = name;
-  this._emit(OlcEvents.DEFINITIONS_CHANGED, { definitions: this._definitions });
 }
 
 OlcModeler.prototype.getOlcById = function(id) {
@@ -273,46 +247,9 @@ OlcModeler.prototype.getStateById = function(id) {
   return this.getOlcs().flatMap(olc => olc.get('Elements')).filter(element => is(element, 'olc:State')).filter(state => state.id === id)[0];
 }
 
-
 OlcModeler.prototype.getOlcs = function() {
   return this._definitions.get('olcs');
-  console.log(this._definitions.get('olcs'));
 }
-
-/*OlcModeler.prototype.createState = function (name, olc) {
-  this.showOlcById(olc.id);
-
-  const modeling = this.get('modeling');
-  const canvas = this.get('canvas');
-  const diagramRoot = canvas.getRootElement();
-
-  const {x,y} = nextPosition(this, 'olc:State');
-  const shape = modeling.createShape({
-    type: 'olc:State',
-    name: name,
-    x: parseInt(x),
-    y: parseInt(y)
-  }, { x, y }, diagramRoot);
-  return shape.businessObject;
-}*/
-
-
-OlcModeler.prototype.createTransition = function (sourceState, targetState) {
-  this.showOlcById(root(sourceState).id);
-  const modeling = this.get('modeling');
-  const sourceVisual = this.get('elementRegistry').get(sourceState.id);
-  const targetVisual = this.get('elementRegistry').get(targetState.id);
-
-  const transitionVisual = modeling.connect(sourceVisual, targetVisual, {
-    type: 'olc:Transition',
-    source: sourceState,
-    target: targetState,
-    waypoints: this.get('olcUpdater').connectionWaypoints(sourceState, targetState)
-  });
-
-  return transitionVisual.businessObject;
-}
-
 
 OlcModeler.prototype.getReferencesInState = function (olcState) {
   return this.get('elementRegistry').filter((element) =>
@@ -330,7 +267,6 @@ OlcModeler.prototype.renameOlcState = function (olcState) {
       })
   );
 }
-
 
 //delete olc
 OlcModeler.prototype.deleteOlcState = function (olcState) {

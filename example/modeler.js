@@ -169,9 +169,10 @@ var modeler = new BpmnSpaceModeler({
 });
 
 
+//Serve per creare gli XML dei due modeler
 async function createNewDiagram() {
     await modeler.importXML(exampleXML);
-    await olcModeler.createNew();
+    await olcModeler.createNew(); //inizializza XML dell'olc modeler
 }
 
 $(function() {
