@@ -49,6 +49,14 @@ export default function Mediator() {
             event.cancelBubble = true;
         }
     });
+
+    this.on(CommonEvents.GET_STATE, event => {
+        return this.getStates();
+    });
+}
+
+Mediator.prototype.getStates = function () {
+    return this.olcModelerHook.modeler.getStateByName();
 }
 
 Mediator.prototype.getHooks = function () {
@@ -97,16 +105,11 @@ function wrapCallback(callback, hook) {
     return (...args) => callback(...args, hook);
 }
 
-
-Mediator.prototype.addedClass = function (clazz) {
-    this.olcModelerHook.modeler.addOlc(clazz);
-}
-
 Mediator.prototype.addState = function (olcState) {
+   // console.log(this.olcModelerHook.modeler.getStateByName(olcState.name))
 }
 
 Mediator.prototype.confirmStateDeletion = function (olcState) {
-    const affectedDataObjectReferences = this.spaceModelerHook.modeler.getDataObjectReferencesInState(olcState);
     return confirm('Do you really want to delete state \"' + olcState.name + '\" ?');
 }
 
@@ -143,7 +146,7 @@ Mediator.prototype.getHookForElement = function(element) {
 // === Olc Modeler Hook
 Mediator.prototype.OlcModelerHook = function (eventBus, olcModeler) {
     CommandInterceptor.call(this, eventBus);
-    AbstractHook.call(this, olcModeler, 'OLCs', 'https://github.com/bptlab/fCM-design-support/wiki/Object-Lifecycle-(OLC)');
+    AbstractHook.call(this, olcModeler, 'OLCs');
     this.mediator.olcModelerHook = this;
     this.eventBus = eventBus;
 
@@ -153,7 +156,6 @@ Mediator.prototype.OlcModelerHook = function (eventBus, olcModeler) {
         if (is(event.context.shape, 'olc:State')) {
             this.mediator.addState(event.context.shape.businessObject);
         }
-        
     });
 
     this.executed([
@@ -192,9 +194,9 @@ Mediator.prototype.OlcModelerHook = function (eventBus, olcModeler) {
         }
     });
 
-    eventBus.on(OlcEvents.DEFINITIONS_CHANGED, event => {
+    /*eventBus.on(OlcEvents.DEFINITIONS_CHANGED, event => {
         this.mediator.olcListChanged(event.definitions.olcs);
-    });
+    });*/
 
     /*eventBus.on(OlcEvents.OLC_RENAME, event => {
         this.mediator.olcRenamed(event.olc, event.name);
@@ -217,19 +219,19 @@ Mediator.prototype.OlcModelerHook.isHook = true;
 // === Fragment Modeler Hook
 Mediator.prototype.SpaceModelerHook = function (eventBus, spaceModeler) {
     CommandInterceptor.call(this, eventBus);
-    AbstractHook.call(this, spaceModeler, 'Space', 'https://github.com/bptlab/fCM-design-support/wiki/Fragments');
+    AbstractHook.call(this, spaceModeler, 'Space');
     this.mediator.spaceModelerHook = this;
     this.eventBus = eventBus;
 
-    eventBus.on('import.parse.complete', ({warnings}) => {
+    /*eventBus.on('import.parse.complete', ({warnings}) => {
         warnings.filter(({message}) => message.startsWith('unresolved reference')).forEach(({property, value, element}) => {
-            if (property === 'space:destination') {
-                const state = this.mediator.olcModelerHook.modeler.getStateById(value)
-                if (!state) { throw new Error('Could not resolve olc state with id '+value); }
-                element.get('destination').push(state);
+            if (property === 'bpmn:Task#destination') {
+                const dest = this.mediator.olcModelerHook.modeler.getStateById(value)
+                if (!dest) { throw new Error('Could not resolve olc state with id '+value); }
+                element.get('destination').push(dest);
             }
         });
-    });
+    });*/
 }
 inherits(Mediator.prototype.SpaceModelerHook, CommandInterceptor);
 

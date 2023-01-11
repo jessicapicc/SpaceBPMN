@@ -66,17 +66,13 @@ function Guard(props) {
     const modeling = useService('modeling');
     const translate = useService('translate');
     const debounce = useService('debounceInput');
-  
-
-    
-
-
-
 
     const getValue = () => {
       return element.businessObject.destination || '';
     }
   
+  
+
     const getOptions = () =>  createOptions(); 
 
     function createOptions(overrides = {}) {
@@ -86,36 +82,18 @@ function Guard(props) {
 
     //definisci un array con le destinazioni che all'inizio è vuoto
     //ad ogni nuovo olc:state aggiungiamo l'opzione dinamicamente
-    // cerca di capire appendchild
-    //cerca di capire come gestisce le classi e lo stato di olc modeler. 
      //fire o dispatch cerca. 
-   /* function getDestination (){
-      this.get('elementRegistry').filter((element) => 
-      is(element, 'bpmn:Task') &&
-      element.type !== 'label' &&
-      clazz.id &&
-      element.businessObject.dataclass?.id === clazz.id)}*/
 
+    //for(let i=0; states.lenght; i++ ) {
       const newOptions = [
         {
-          label: 'null',
-          value: null
-        },
-        {
-          value: 'A'
-        },
-        {
-          label: 'option B',
-          value: 'B',
-        },
-        {
-          label: 'option C',
-          value: 'C',
+          label: 'states[i]',
+          value: 'prova'
         },
         ...options
       ];
-    
       return newOptions;
+     // }
     }
 
    /* const setValue = value => {

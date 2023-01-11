@@ -247,6 +247,16 @@ OlcModeler.prototype.getStateById = function(id) {
   return this.getOlcs().flatMap(olc => olc.get('Elements')).filter(element => is(element, 'olc:State')).filter(state => state.id === id)[0];
 }
 
+OlcModeler.prototype.getStatesByName = function() {
+  var states=this.getOlcs().get('Elements').filter(element => is(element, 'olc:State'));
+  var nameStates = [];
+  for (let i=0; i<states.length; i++){
+  var nomestato = states.filter(state => state.name)[i];
+  nameStates.push(nomestato.get('name'))
+}
+  return nameStates;
+}
+
 OlcModeler.prototype.getOlcs = function() {
   return this._definitions.get('olcs');
 }

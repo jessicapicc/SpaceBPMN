@@ -3,11 +3,10 @@ import { namespace } from "../util/Util";
 /**
  * Makes the hook interface explicit
  */
-export default function AbstractHook(modeler, title, wikilink) {
+export default function AbstractHook(modeler, title) {
 
     this.modeler = modeler;
     this.title = title;
-    this.wikilink = wikilink;
 
     this.getNamespace = function () {
         return this.modeler.get && namespace(this.modeler.get('canvas').getRootElement());

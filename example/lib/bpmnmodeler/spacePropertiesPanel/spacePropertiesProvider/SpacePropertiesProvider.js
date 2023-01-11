@@ -2,7 +2,7 @@
 // The entry is a text input field with logic attached to create,
 // update and delete the "spell" property.
 import spaceProps from './parts/SpaceProps';
-
+import CommonEvents from "../../../common/CommonEvents";
 import { is } from 'bpmn-js/lib/util/ModelUtil';
 
 const LOW_PRIORITY = 500;
@@ -15,27 +15,18 @@ const LOW_PRIORITY = 500;
  * @param {PropertiesPanel} propertiesPanel
  * @param {Function} translate
  */
-export default function SpacePropertiesProvider(propertiesPanel, translate) {
+export default function SpacePropertiesProvider(propertiesPanel, translate, eventBus, spaceModeler) {
 
   // API ////////
+  this._eventBus = eventBus;
+  //this._spaceModeler= spaceModeler;
+  //const states = this._eventBus.fire(CommonEvents.GET_STATE); 
+  
+  //console.log(this._spaceModeler);
+  
 
-  /**
-   * Return the groups provided for the given element.
-   *
-   * @param {DiagramElement} element
-   *
-   * @return {(Object[]) => (Object[])} groups middleware
-   */
   this.getGroups = function(element) {
 
-    /**
-     * We return a middleware that modifies
-     * the existing groups.
-     *
-     * @param {Object[]} groups
-     *
-     * @return {Object[]} modified groups
-     */
     return function(groups) {
 
       // Add the "magic" group
@@ -47,26 +38,25 @@ export default function SpacePropertiesProvider(propertiesPanel, translate) {
     }
   };
 
-
   // registration ////////
 
-  // Register our custom magic properties provider.
+  // Register our custom properties provider.
   // Use a lower priority to ensure it is loaded after
   // the basic BPMN properties.
   propertiesPanel.registerProvider(LOW_PRIORITY, this);
 }
 
-SpacePropertiesProvider.$inject = [ 'propertiesPanel', 'translate' ];
-
 // Create the custom magic group
 function createSpaceGroup(element, translate) {
-
   // create a group called "Magic properties".
   const spaceGroup ={
     id: 'space',
     label: translate('SpaceBPMN properties'),
     entries: spaceProps(element)
   };
-
   return spaceGroup
 }
+
+SpacePropertiesProvider.$inject = [ 'propertiesPanel', 'translate', 'eventBus', 'spaceModeler' ];
+
+
